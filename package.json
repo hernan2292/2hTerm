@@ -3,7 +3,7 @@
   "displayName": "2hTerm",
   "description": "Gestor de sesiones SSH / SFTP / túneles estilo MobaXterm, sincronizado entre tus equipos",
   "version": "0.1.0",
-  "publisher": "hernanh",
+  "publisher": "HernanHerreraDev",
   "author": "Hernan Herrera",
   "license": "GPL-3.0-only",
   "icon": "media/icon.png",
