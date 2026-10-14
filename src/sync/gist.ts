@@ -3,9 +3,9 @@ import { canonical, emptyDoc, mergeDocs, Store } from '../store';
 import { SyncDoc } from '../types';
 import { cfg, debounce, errMsg } from '../util';
 
-const FILE = '2hterm-sync.json';
-const DESCRIPTION = '2hTerm sync (do not edit by hand)';
-const GIST_ID_KEY = '2hterm.gistId';
+const FILE = 'hterm-sync.json';
+const DESCRIPTION = 'hTerm sync (do not edit by hand)';
+const GIST_ID_KEY = 'hterm.gistId';
 
 interface GistResponse {
   id: string;
@@ -46,7 +46,7 @@ export class GistSync implements vscode.Disposable {
     this.running = this.run(interactive)
       .catch((e) => {
         this.log.appendLine(`[gist] ${errMsg(e)}`);
-        if (interactive) vscode.window.showErrorMessage(`2hTerm: GitHub sync error: ${errMsg(e)}`);
+        if (interactive) vscode.window.showErrorMessage(`hTerm: GitHub sync error: ${errMsg(e)}`);
       })
       .finally(() => (this.running = undefined));
     return this.running;
@@ -77,7 +77,7 @@ export class GistSync implements vscode.Disposable {
       }
     }
     this.log.appendLine(`[gist] synced ${new Date().toLocaleTimeString()}`);
-    if (interactive) vscode.window.setStatusBarMessage('$(check) 2hTerm synced with GitHub', 4000);
+    if (interactive) vscode.window.setStatusBarMessage('$(check) hTerm synced with GitHub', 4000);
   }
 
   private async findGist(token: string): Promise<GistResponse | undefined> {

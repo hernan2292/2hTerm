@@ -8,7 +8,7 @@ export function newId(): string {
 }
 
 export function cfg<T>(key: string, fallback: T): T {
-  return vscode.workspace.getConfiguration('2hterm').get<T>(key, fallback);
+  return vscode.workspace.getConfiguration('hterm').get<T>(key, fallback);
 }
 
 export function expandHome(p: string): string {

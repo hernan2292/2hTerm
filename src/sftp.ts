@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import { ConnectionManager, Lease } from './connection';
 import { call } from './util';
 
-export const SFTP_SCHEME = 'sftp2h';
+export const SFTP_SCHEME = 'hterm-sftp';
 
 const S_IFMT = 0o170000;
 const S_IFDIR = 0o040000;
@@ -30,7 +30,7 @@ interface Conn {
 }
 
 /**
- * Exposes remote hosts as a VS Code file system: sftp2h://<sessionId>/<absolute path>.
+ * Exposes remote hosts as a VS Code file system: hterm-sftp://<sessionId>/<absolute path>.
  * Once added as a workspace folder, files can be browsed, edited, dragged in/out and searched.
  */
 export class SftpFileSystem implements vscode.FileSystemProvider, vscode.Disposable {

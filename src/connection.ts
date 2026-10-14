@@ -174,7 +174,7 @@ export class ConnectionManager implements vscode.Disposable {
     let password: string | undefined;
     const askPassword = async (prompt?: string) => {
       const pw = await vscode.window.showInputBox({
-        title: `2hTerm: ${session.name}`,
+        title: `hTerm: ${session.name}`,
         prompt: prompt ?? `Password for ${sshTarget(session)}`,
         password: true,
         ignoreFocusOut: true,
@@ -201,7 +201,7 @@ export class ConnectionManager implements vscode.Disposable {
           let pass = await this.vault.get(session.id, 'passphrase');
           if (!pass || utils.parseKey(key, pass) instanceof Error) {
             pass = await vscode.window.showInputBox({
-              title: `2hTerm: ${session.name}`,
+              title: `hTerm: ${session.name}`,
               prompt: 'Private key passphrase',
               password: true,
               ignoreFocusOut: true,
@@ -231,7 +231,7 @@ export class ConnectionManager implements vscode.Disposable {
         const answers: string[] = [];
         for (const p of prompts) {
           const a = await vscode.window.showInputBox({
-            title: `2hTerm: ${session.name}`,
+            title: `hTerm: ${session.name}`,
             prompt: [instructions, p.prompt].filter(Boolean).join(' — '),
             password: !p.echo,
             ignoreFocusOut: true,

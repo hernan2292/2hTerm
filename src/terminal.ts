@@ -143,7 +143,7 @@ export class TerminalRegistry implements vscode.Disposable {
     private readonly mgr: ConnectionManager,
     private readonly tunnels: TunnelManager,
   ) {
-    this.status.command = '2hterm.stopMultiExec';
+    this.status.command = 'hterm.stopMultiExec';
     this.status.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
   }
 
@@ -186,7 +186,7 @@ export class TerminalRegistry implements vscode.Disposable {
       pty: p,
     }));
     if (items.length < 2) {
-      vscode.window.showInformationMessage('2hTerm: open at least two SSH terminals to use MultiExec.');
+      vscode.window.showInformationMessage('hTerm: open at least two SSH terminals to use MultiExec.');
       return;
     }
     const picked = await vscode.window.showQuickPick(items, {

@@ -1,9 +1,9 @@
 {
-  "name": "2hterm",
-  "displayName": "2hTerm",
+  "name": "hterm",
+  "displayName": "hTerm",
   "description": "MobaXterm-style SSH / SFTP / tunnel session manager, synced across all your machines",
   "version": "0.1.1",
-  "publisher": "HernanHerreraDev",
+  "publisher": "HernanHerrera",
   "author": "Hernan Herrera",
   "license": "GPL-3.0-only",
   "icon": "media/icon.png",
@@ -37,124 +37,124 @@
   ],
   "main": "./dist/extension.js",
   "activationEvents": [
-    "onFileSystem:sftp2h",
+    "onFileSystem:hterm-sftp",
     "onStartupFinished"
   ],
   "contributes": {
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "twohterm",
-          "title": "2hTerm",
+          "id": "hterm",
+          "title": "hTerm",
           "icon": "media/icon.svg"
         }
       ]
     },
     "views": {
-      "twohterm": [
+      "hterm": [
         {
-          "id": "2hterm.sessions",
+          "id": "hterm.sessions",
           "name": "Sessions"
         },
         {
-          "id": "2hterm.tunnels",
+          "id": "hterm.tunnels",
           "name": "Active Tunnels"
         }
       ]
     },
     "viewsWelcome": [
       {
-        "view": "2hterm.sessions",
-        "contents": "You don't have any sessions yet.\n[New SSH Session](command:2hterm.addSession)\n[Import (~/.ssh/config, MobaXterm, JSON)](command:2hterm.import)\nIf you already use 2hTerm on another machine, turn on Settings Sync with your account and your sessions will show up here."
+        "view": "hterm.sessions",
+        "contents": "You don't have any sessions yet.\n[New SSH Session](command:hterm.addSession)\n[Import (~/.ssh/config, MobaXterm, JSON)](command:hterm.import)\nIf you already use hTerm on another machine, turn on Settings Sync with your account and your sessions will show up here."
       },
       {
-        "view": "2hterm.tunnels",
+        "view": "hterm.tunnels",
         "contents": "No active tunnels."
       }
     ],
     "commands": [
-      { "command": "2hterm.addSession", "title": "New Session", "category": "2hTerm", "icon": "$(add)" },
-      { "command": "2hterm.addFolder", "title": "New Folder", "category": "2hTerm", "icon": "$(new-folder)" },
-      { "command": "2hterm.addSessionHere", "title": "New Session Here", "category": "2hTerm", "icon": "$(add)" },
-      { "command": "2hterm.addFolderHere", "title": "New Subfolder", "category": "2hTerm" },
-      { "command": "2hterm.renameFolder", "title": "Rename Folder", "category": "2hTerm" },
-      { "command": "2hterm.deleteFolder", "title": "Delete Folder", "category": "2hTerm" },
-      { "command": "2hterm.quickConnect", "title": "Quick Connect", "category": "2hTerm", "icon": "$(plug)" },
-      { "command": "2hterm.connect", "title": "Open Terminal", "category": "2hTerm", "icon": "$(terminal)" },
-      { "command": "2hterm.openSftp", "title": "Open SFTP in Explorer", "category": "2hTerm", "icon": "$(folder-opened)" },
-      { "command": "2hterm.startTunnels", "title": "Start Tunnels", "category": "2hTerm", "icon": "$(arrow-swap)" },
-      { "command": "2hterm.disconnect", "title": "Disconnect", "category": "2hTerm", "icon": "$(debug-disconnect)" },
-      { "command": "2hterm.editSession", "title": "Edit Session", "category": "2hTerm", "icon": "$(edit)" },
-      { "command": "2hterm.duplicateSession", "title": "Duplicate Session", "category": "2hTerm" },
-      { "command": "2hterm.deleteSession", "title": "Delete Session", "category": "2hTerm" },
-      { "command": "2hterm.copySshCommand", "title": "Copy ssh Command", "category": "2hTerm" },
-      { "command": "2hterm.multiExec", "title": "MultiExec: Type into Multiple Terminals", "category": "2hTerm", "icon": "$(broadcast)" },
-      { "command": "2hterm.stopMultiExec", "title": "MultiExec: Stop", "category": "2hTerm" },
-      { "command": "2hterm.stopTunnel", "title": "Stop Tunnel", "category": "2hTerm", "icon": "$(debug-stop)" },
-      { "command": "2hterm.syncNow", "title": "Sync Now", "category": "2hTerm", "icon": "$(sync)" },
-      { "command": "2hterm.refresh", "title": "Refresh", "category": "2hTerm", "icon": "$(refresh)" },
-      { "command": "2hterm.import", "title": "Import Sessions…", "category": "2hTerm", "icon": "$(cloud-download)" },
-      { "command": "2hterm.export", "title": "Export Sessions (JSON, without passwords)", "category": "2hTerm" },
-      { "command": "2hterm.vault.setMasterPassword", "title": "Vault: Create / Change Master Password", "category": "2hTerm" },
-      { "command": "2hterm.vault.lock", "title": "Vault: Lock on This Machine", "category": "2hTerm" },
-      { "command": "2hterm.forgetHostKey", "title": "Forget Host Fingerprint", "category": "2hTerm" },
-      { "command": "2hterm.sftp.download", "title": "2hTerm: Download…", "category": "2hTerm" },
-      { "command": "2hterm.sftp.upload", "title": "2hTerm: Upload Files Here…", "category": "2hTerm" },
-      { "command": "2hterm.sftp.terminalHere", "title": "2hTerm: Open SSH Terminal Here", "category": "2hTerm" }
+      { "command": "hterm.addSession", "title": "New Session", "category": "hTerm", "icon": "$(add)" },
+      { "command": "hterm.addFolder", "title": "New Folder", "category": "hTerm", "icon": "$(new-folder)" },
+      { "command": "hterm.addSessionHere", "title": "New Session Here", "category": "hTerm", "icon": "$(add)" },
+      { "command": "hterm.addFolderHere", "title": "New Subfolder", "category": "hTerm" },
+      { "command": "hterm.renameFolder", "title": "Rename Folder", "category": "hTerm" },
+      { "command": "hterm.deleteFolder", "title": "Delete Folder", "category": "hTerm" },
+      { "command": "hterm.quickConnect", "title": "Quick Connect", "category": "hTerm", "icon": "$(plug)" },
+      { "command": "hterm.connect", "title": "Open Terminal", "category": "hTerm", "icon": "$(terminal)" },
+      { "command": "hterm.openSftp", "title": "Open SFTP in Explorer", "category": "hTerm", "icon": "$(folder-opened)" },
+      { "command": "hterm.startTunnels", "title": "Start Tunnels", "category": "hTerm", "icon": "$(arrow-swap)" },
+      { "command": "hterm.disconnect", "title": "Disconnect", "category": "hTerm", "icon": "$(debug-disconnect)" },
+      { "command": "hterm.editSession", "title": "Edit Session", "category": "hTerm", "icon": "$(edit)" },
+      { "command": "hterm.duplicateSession", "title": "Duplicate Session", "category": "hTerm" },
+      { "command": "hterm.deleteSession", "title": "Delete Session", "category": "hTerm" },
+      { "command": "hterm.copySshCommand", "title": "Copy ssh Command", "category": "hTerm" },
+      { "command": "hterm.multiExec", "title": "MultiExec: Type into Multiple Terminals", "category": "hTerm", "icon": "$(broadcast)" },
+      { "command": "hterm.stopMultiExec", "title": "MultiExec: Stop", "category": "hTerm" },
+      { "command": "hterm.stopTunnel", "title": "Stop Tunnel", "category": "hTerm", "icon": "$(debug-stop)" },
+      { "command": "hterm.syncNow", "title": "Sync Now", "category": "hTerm", "icon": "$(sync)" },
+      { "command": "hterm.refresh", "title": "Refresh", "category": "hTerm", "icon": "$(refresh)" },
+      { "command": "hterm.import", "title": "Import Sessions…", "category": "hTerm", "icon": "$(cloud-download)" },
+      { "command": "hterm.export", "title": "Export Sessions (JSON, without passwords)", "category": "hTerm" },
+      { "command": "hterm.vault.setMasterPassword", "title": "Vault: Create / Change Master Password", "category": "hTerm" },
+      { "command": "hterm.vault.lock", "title": "Vault: Lock on This Machine", "category": "hTerm" },
+      { "command": "hterm.forgetHostKey", "title": "Forget Host Fingerprint", "category": "hTerm" },
+      { "command": "hterm.sftp.download", "title": "hTerm: Download…", "category": "hTerm" },
+      { "command": "hterm.sftp.upload", "title": "hTerm: Upload Files Here…", "category": "hTerm" },
+      { "command": "hterm.sftp.terminalHere", "title": "hTerm: Open SSH Terminal Here", "category": "hTerm" }
     ],
     "menus": {
       "view/title": [
-        { "command": "2hterm.addSession", "when": "view == 2hterm.sessions", "group": "navigation@1" },
-        { "command": "2hterm.addFolder", "when": "view == 2hterm.sessions", "group": "navigation@2" },
-        { "command": "2hterm.quickConnect", "when": "view == 2hterm.sessions", "group": "navigation@3" },
-        { "command": "2hterm.multiExec", "when": "view == 2hterm.sessions", "group": "navigation@4" },
-        { "command": "2hterm.syncNow", "when": "view == 2hterm.sessions", "group": "navigation@5" },
-        { "command": "2hterm.import", "when": "view == 2hterm.sessions", "group": "1_io@1" },
-        { "command": "2hterm.export", "when": "view == 2hterm.sessions", "group": "1_io@2" },
-        { "command": "2hterm.vault.setMasterPassword", "when": "view == 2hterm.sessions", "group": "2_vault@1" },
-        { "command": "2hterm.vault.lock", "when": "view == 2hterm.sessions", "group": "2_vault@2" },
-        { "command": "2hterm.forgetHostKey", "when": "view == 2hterm.sessions", "group": "2_vault@3" },
-        { "command": "2hterm.refresh", "when": "view == 2hterm.sessions", "group": "3_misc@1" }
+        { "command": "hterm.addSession", "when": "view == hterm.sessions", "group": "navigation@1" },
+        { "command": "hterm.addFolder", "when": "view == hterm.sessions", "group": "navigation@2" },
+        { "command": "hterm.quickConnect", "when": "view == hterm.sessions", "group": "navigation@3" },
+        { "command": "hterm.multiExec", "when": "view == hterm.sessions", "group": "navigation@4" },
+        { "command": "hterm.syncNow", "when": "view == hterm.sessions", "group": "navigation@5" },
+        { "command": "hterm.import", "when": "view == hterm.sessions", "group": "1_io@1" },
+        { "command": "hterm.export", "when": "view == hterm.sessions", "group": "1_io@2" },
+        { "command": "hterm.vault.setMasterPassword", "when": "view == hterm.sessions", "group": "2_vault@1" },
+        { "command": "hterm.vault.lock", "when": "view == hterm.sessions", "group": "2_vault@2" },
+        { "command": "hterm.forgetHostKey", "when": "view == hterm.sessions", "group": "2_vault@3" },
+        { "command": "hterm.refresh", "when": "view == hterm.sessions", "group": "3_misc@1" }
       ],
       "view/item/context": [
-        { "command": "2hterm.connect", "when": "view == 2hterm.sessions && viewItem =~ /^session/", "group": "inline@1" },
-        { "command": "2hterm.openSftp", "when": "view == 2hterm.sessions && viewItem =~ /^session/", "group": "inline@2" },
-        { "command": "2hterm.disconnect", "when": "view == 2hterm.sessions && viewItem == session.connected", "group": "inline@3" },
-        { "command": "2hterm.connect", "when": "view == 2hterm.sessions && viewItem =~ /^session/", "group": "1_open@1" },
-        { "command": "2hterm.openSftp", "when": "view == 2hterm.sessions && viewItem =~ /^session/", "group": "1_open@2" },
-        { "command": "2hterm.startTunnels", "when": "view == 2hterm.sessions && viewItem =~ /^session/", "group": "1_open@3" },
-        { "command": "2hterm.disconnect", "when": "view == 2hterm.sessions && viewItem == session.connected", "group": "1_open@4" },
-        { "command": "2hterm.editSession", "when": "view == 2hterm.sessions && viewItem =~ /^session/", "group": "2_edit@1" },
-        { "command": "2hterm.duplicateSession", "when": "view == 2hterm.sessions && viewItem =~ /^session/", "group": "2_edit@2" },
-        { "command": "2hterm.copySshCommand", "when": "view == 2hterm.sessions && viewItem =~ /^session/", "group": "2_edit@3" },
-        { "command": "2hterm.deleteSession", "when": "view == 2hterm.sessions && viewItem =~ /^session/", "group": "3_danger@1" },
-        { "command": "2hterm.addSessionHere", "when": "view == 2hterm.sessions && viewItem == folder", "group": "inline@1" },
-        { "command": "2hterm.addSessionHere", "when": "view == 2hterm.sessions && viewItem == folder", "group": "1_new@1" },
-        { "command": "2hterm.addFolderHere", "when": "view == 2hterm.sessions && viewItem == folder", "group": "1_new@2" },
-        { "command": "2hterm.renameFolder", "when": "view == 2hterm.sessions && viewItem == folder", "group": "2_edit@1" },
-        { "command": "2hterm.deleteFolder", "when": "view == 2hterm.sessions && viewItem == folder", "group": "3_danger@1" },
-        { "command": "2hterm.stopTunnel", "when": "view == 2hterm.tunnels && viewItem == tunnel", "group": "inline" }
+        { "command": "hterm.connect", "when": "view == hterm.sessions && viewItem =~ /^session/", "group": "inline@1" },
+        { "command": "hterm.openSftp", "when": "view == hterm.sessions && viewItem =~ /^session/", "group": "inline@2" },
+        { "command": "hterm.disconnect", "when": "view == hterm.sessions && viewItem == session.connected", "group": "inline@3" },
+        { "command": "hterm.connect", "when": "view == hterm.sessions && viewItem =~ /^session/", "group": "1_open@1" },
+        { "command": "hterm.openSftp", "when": "view == hterm.sessions && viewItem =~ /^session/", "group": "1_open@2" },
+        { "command": "hterm.startTunnels", "when": "view == hterm.sessions && viewItem =~ /^session/", "group": "1_open@3" },
+        { "command": "hterm.disconnect", "when": "view == hterm.sessions && viewItem == session.connected", "group": "1_open@4" },
+        { "command": "hterm.editSession", "when": "view == hterm.sessions && viewItem =~ /^session/", "group": "2_edit@1" },
+        { "command": "hterm.duplicateSession", "when": "view == hterm.sessions && viewItem =~ /^session/", "group": "2_edit@2" },
+        { "command": "hterm.copySshCommand", "when": "view == hterm.sessions && viewItem =~ /^session/", "group": "2_edit@3" },
+        { "command": "hterm.deleteSession", "when": "view == hterm.sessions && viewItem =~ /^session/", "group": "3_danger@1" },
+        { "command": "hterm.addSessionHere", "when": "view == hterm.sessions && viewItem == folder", "group": "inline@1" },
+        { "command": "hterm.addSessionHere", "when": "view == hterm.sessions && viewItem == folder", "group": "1_new@1" },
+        { "command": "hterm.addFolderHere", "when": "view == hterm.sessions && viewItem == folder", "group": "1_new@2" },
+        { "command": "hterm.renameFolder", "when": "view == hterm.sessions && viewItem == folder", "group": "2_edit@1" },
+        { "command": "hterm.deleteFolder", "when": "view == hterm.sessions && viewItem == folder", "group": "3_danger@1" },
+        { "command": "hterm.stopTunnel", "when": "view == hterm.tunnels && viewItem == tunnel", "group": "inline" }
       ],
       "explorer/context": [
-        { "command": "2hterm.sftp.download", "when": "resourceScheme == sftp2h", "group": "7_2hterm@1" },
-        { "command": "2hterm.sftp.upload", "when": "resourceScheme == sftp2h && explorerResourceIsFolder", "group": "7_2hterm@2" },
-        { "command": "2hterm.sftp.terminalHere", "when": "resourceScheme == sftp2h && explorerResourceIsFolder", "group": "7_2hterm@3" }
+        { "command": "hterm.sftp.download", "when": "resourceScheme == hterm-sftp", "group": "7_hterm@1" },
+        { "command": "hterm.sftp.upload", "when": "resourceScheme == hterm-sftp && explorerResourceIsFolder", "group": "7_hterm@2" },
+        { "command": "hterm.sftp.terminalHere", "when": "resourceScheme == hterm-sftp && explorerResourceIsFolder", "group": "7_hterm@3" }
       ],
       "commandPalette": [
-        { "command": "2hterm.addSessionHere", "when": "false" },
-        { "command": "2hterm.addFolderHere", "when": "false" },
-        { "command": "2hterm.renameFolder", "when": "false" },
-        { "command": "2hterm.deleteFolder", "when": "false" },
-        { "command": "2hterm.stopTunnel", "when": "false" },
-        { "command": "2hterm.sftp.download", "when": "false" },
-        { "command": "2hterm.sftp.upload", "when": "false" },
-        { "command": "2hterm.sftp.terminalHere", "when": "false" }
+        { "command": "hterm.addSessionHere", "when": "false" },
+        { "command": "hterm.addFolderHere", "when": "false" },
+        { "command": "hterm.renameFolder", "when": "false" },
+        { "command": "hterm.deleteFolder", "when": "false" },
+        { "command": "hterm.stopTunnel", "when": "false" },
+        { "command": "hterm.sftp.download", "when": "false" },
+        { "command": "hterm.sftp.upload", "when": "false" },
+        { "command": "hterm.sftp.terminalHere", "when": "false" }
       ]
     },
     "configuration": {
-      "title": "2hTerm",
+      "title": "hTerm",
       "properties": {
-        "2hterm.sync.provider": {
+        "hterm.sync.provider": {
           "type": "string",
           "enum": ["settingsSync", "githubGist", "none"],
           "enumDescriptions": [
@@ -166,45 +166,45 @@
           "markdownDescription": "How sessions, folders, host fingerprints and the encrypted vault are synced across your machines.",
           "scope": "application"
         },
-        "2hterm.sync.secrets": {
+        "hterm.sync.secrets": {
           "type": "boolean",
           "default": true,
           "markdownDescription": "Sync passwords and private keys, encrypted (AES-256-GCM) with a master password. When disabled, secrets are stored only in this machine's local keychain.",
           "scope": "application"
         },
-        "2hterm.sync.gistIntervalMinutes": {
+        "hterm.sync.gistIntervalMinutes": {
           "type": "number",
           "default": 5,
           "minimum": 1,
           "description": "How often, in minutes, to poll the Gist (githubGist provider only).",
           "scope": "application"
         },
-        "2hterm.terminal.location": {
+        "hterm.terminal.location": {
           "type": "string",
           "enum": ["editor", "panel"],
           "default": "editor",
           "description": "Where to open SSH terminals: as editor tabs (MobaXterm style) or in the bottom panel.",
           "scope": "application"
         },
-        "2hterm.ssh.keepaliveSeconds": {
+        "hterm.ssh.keepaliveSeconds": {
           "type": "number",
           "default": 30,
           "description": "SSH keepalive interval in seconds (0 = disabled).",
           "scope": "application"
         },
-        "2hterm.ssh.readyTimeoutSeconds": {
+        "hterm.ssh.readyTimeoutSeconds": {
           "type": "number",
           "default": 20,
           "description": "Maximum time, in seconds, to establish the SSH connection.",
           "scope": "application"
         },
-        "2hterm.ssh.agent": {
+        "hterm.ssh.agent": {
           "type": "string",
           "default": "",
           "markdownDescription": "SSH agent for the `agent` method. Empty = automatic (`\\\\.\\pipe\\openssh-ssh-agent` on Windows, `$SSH_AUTH_SOCK` on Linux/macOS). Use `pageant` for PuTTY Pageant.",
           "scope": "machine"
         },
-        "2hterm.x11.display": {
+        "hterm.x11.display": {
           "type": "string",
           "default": "localhost:0",
           "markdownDescription": "Local X server for X11 forwarding (e.g. VcXsrv or X410 on Windows), in `host:display` format.",

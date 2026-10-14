@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { Folder, KnownHost, Session, SyncDoc } from './types';
 
-export const DOC_KEY = '2hterm.doc';
+export const DOC_KEY = 'hterm.doc';
 const TOMBSTONE_TTL = 1000 * 60 * 60 * 24 * 180;
 
 export function emptyDoc(): SyncDoc {

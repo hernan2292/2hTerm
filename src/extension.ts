@@ -15,7 +15,7 @@ import { cfg, errMsg, newId, sshTarget } from './util';
 import { Vault } from './vault';
 
 export function activate(ctx: vscode.ExtensionContext) {
-  const log = vscode.window.createOutputChannel('2hTerm');
+  const log = vscode.window.createOutputChannel('hTerm');
   const store = new Store(ctx);
   const vault = new Vault(ctx, store);
   const mgr = new ConnectionManager(store, vault, log);
@@ -27,8 +27,8 @@ export function activate(ctx: vscode.ExtensionContext) {
 
   ctx.subscriptions.push(
     vscode.workspace.registerFileSystemProvider(SFTP_SCHEME, sftp, { isCaseSensitive: true }),
-    vscode.window.createTreeView('2hterm.sessions', { treeDataProvider: tree, dragAndDropController: tree, canSelectMany: true, showCollapseAll: true }),
-    vscode.window.createTreeView('2hterm.tunnels', { treeDataProvider: new TunnelTree(tunnels) }),
+    vscode.window.createTreeView('hterm.sessions', { treeDataProvider: tree, dragAndDropController: tree, canSelectMany: true, showCollapseAll: true }),
+    vscode.window.createTreeView('hterm.tunnels', { treeDataProvider: new TunnelTree(tunnels) }),
     store.onDidChange(() => tree.refresh()),
     mgr.onDidChange(() => tree.refresh()),
   );
@@ -46,7 +46,7 @@ export function activate(ctx: vscode.ExtensionContext) {
   };
   applyProvider();
   ctx.subscriptions.push(
-    vscode.workspace.onDidChangeConfiguration((e) => e.affectsConfiguration('2hterm.sync') && applyProvider()),
+    vscode.workspace.onDidChangeConfiguration((e) => e.affectsConfiguration('hterm.sync') && applyProvider()),
     { dispose: () => gist?.dispose() },
   );
 
@@ -69,7 +69,7 @@ export function activate(ctx: vscode.ExtensionContext) {
       try {
         await fn(...args);
       } catch (e) {
-        if (!isCancel(e)) vscode.window.showErrorMessage(`2hTerm: ${errMsg(e)}`);
+        if (!isCancel(e)) vscode.window.showErrorMessage(`hTerm: ${errMsg(e)}`);
       }
     };
   const reg = (id: string, fn: (...args: any[]) => unknown) => ctx.subscriptions.push(vscode.commands.registerCommand(id, guard(fn)));
@@ -91,13 +91,13 @@ export function activate(ctx: vscode.ExtensionContext) {
   };
 
   // --- Session commands ----------------------------------------------------
-  reg('2hterm.addSession', () => SessionEditor.open(store, vault, blankSession(), true));
-  reg('2hterm.addSessionHere', (n?: Node) => SessionEditor.open(store, vault, blankSession(folderOf(n)?.id), true));
-  reg('2hterm.editSession', async (n?: Node) => {
+  reg('hterm.addSession', () => SessionEditor.open(store, vault, blankSession(), true));
+  reg('hterm.addSessionHere', (n?: Node) => SessionEditor.open(store, vault, blankSession(folderOf(n)?.id), true));
+  reg('hterm.editSession', async (n?: Node) => {
     const s = await sessionOf(n);
     if (s) await SessionEditor.open(store, vault, structuredClone(s), false);
   });
-  reg('2hterm.duplicateSession', async (n?: Node) => {
+  reg('hterm.duplicateSession', async (n?: Node) => {
     const s = await sessionOf(n);
     if (!s) return;
     const copy: Session = { ...structuredClone(s), id: newId(), name: `${s.name} (copy)` };
@@ -105,7 +105,7 @@ export function activate(ctx: vscode.ExtensionContext) {
     await store.upsertSession(copy);
     await vault.copy(s.id, copy.id);
   });
-  reg('2hterm.deleteSession', async (n?: Node, all?: Node[]) => {
+  reg('hterm.deleteSession', async (n?: Node, all?: Node[]) => {
     const targets = (all?.length ? all : n ? [n] : []).filter((x) => x.kind === 'session') as { kind: 'session'; session: Session }[];
     if (!targets.length) {
       const s = await sessionOf();
@@ -122,7 +122,7 @@ export function activate(ctx: vscode.ExtensionContext) {
     }
     await store.save();
   });
-  reg('2hterm.copySshCommand', async (n?: Node) => {
+  reg('hterm.copySshCommand', async (n?: Node) => {
     const s = await sessionOf(n);
     if (!s) return;
     const parts = ['ssh'];
@@ -145,15 +145,15 @@ export function activate(ctx: vscode.ExtensionContext) {
     const name = await vscode.window.showInputBox({ title: 'New Folder', prompt: 'Folder name' });
     if (name?.trim()) await store.upsertFolder({ id: newId(), name: name.trim(), parentId, updatedAt: 0 });
   };
-  reg('2hterm.addFolder', () => newFolder());
-  reg('2hterm.addFolderHere', (n?: Node) => newFolder(folderOf(n)?.id));
-  reg('2hterm.renameFolder', async (n?: Node) => {
+  reg('hterm.addFolder', () => newFolder());
+  reg('hterm.addFolderHere', (n?: Node) => newFolder(folderOf(n)?.id));
+  reg('hterm.renameFolder', async (n?: Node) => {
     const f = folderOf(n);
     if (!f) return;
     const name = await vscode.window.showInputBox({ title: 'Rename Folder', value: f.name });
     if (name?.trim()) await store.upsertFolder({ ...f, name: name.trim() });
   });
-  reg('2hterm.deleteFolder', async (n?: Node) => {
+  reg('hterm.deleteFolder', async (n?: Node) => {
     const f = folderOf(n);
     if (!f) return;
     const ok = await vscode.window.showWarningMessage(
@@ -165,15 +165,15 @@ export function activate(ctx: vscode.ExtensionContext) {
   });
 
   // --- Connect ---------------------------------------------------------------
-  reg('2hterm.connect', async (n?: Node) => {
+  reg('hterm.connect', async (n?: Node) => {
     const s = await sessionOf(n);
     if (s) terminals.open(s);
   });
-  reg('2hterm.openSftp', async (n?: Node) => {
+  reg('hterm.openSftp', async (n?: Node) => {
     const s = await sessionOf(n);
     if (s) await openSftp(s);
   });
-  reg('2hterm.startTunnels', async (n?: Node) => {
+  reg('hterm.startTunnels', async (n?: Node) => {
     const s = await sessionOf(n);
     if (!s) return;
     if (!s.forwards.length) {
@@ -182,10 +182,10 @@ export function activate(ctx: vscode.ExtensionContext) {
       return;
     }
     await tunnels.startAll(s);
-    await vscode.commands.executeCommand('2hterm.tunnels.focus');
+    await vscode.commands.executeCommand('hterm.tunnels.focus');
   });
-  reg('2hterm.stopTunnel', (t: ActiveTunnel) => t?.stop());
-  reg('2hterm.disconnect', async (n?: Node) => {
+  reg('hterm.stopTunnel', (t: ActiveTunnel) => t?.stop());
+  reg('hterm.disconnect', async (n?: Node) => {
     const id = n
       ? (await sessionOf(n))?.id
       : (
@@ -200,9 +200,9 @@ export function activate(ctx: vscode.ExtensionContext) {
     mgr.disconnect(id);
   });
 
-  reg('2hterm.quickConnect', async () => {
+  reg('hterm.quickConnect', async () => {
     const qp = vscode.window.createQuickPick<vscode.QuickPickItem & { s?: Session }>();
-    qp.title = '2hTerm: Quick Connect';
+    qp.title = 'hTerm: Quick Connect';
     qp.placeholder = 'Search for a session or type user@host[:port]';
     qp.matchOnDescription = true;
     const base = store.sessions
@@ -234,11 +234,11 @@ export function activate(ctx: vscode.ExtensionContext) {
     qp.show();
   });
 
-  reg('2hterm.multiExec', () => terminals.pickMultiExec());
-  reg('2hterm.stopMultiExec', () => terminals.stopMultiExec());
+  reg('hterm.multiExec', () => terminals.pickMultiExec());
+  reg('hterm.stopMultiExec', () => terminals.stopMultiExec());
 
   // --- Explorer (SFTP) context menu ----------------------------------------
-  reg('2hterm.sftp.download', async (uri: vscode.Uri) => {
+  reg('hterm.sftp.download', async (uri: vscode.Uri) => {
     if (!uri) return;
     const stat = await vscode.workspace.fs.stat(uri);
     const name = path.posix.basename(uri.path);
@@ -255,7 +255,7 @@ export function activate(ctx: vscode.ExtensionContext) {
     );
     vscode.window.setStatusBarMessage(`$(check) ${name} downloaded`, 4000);
   });
-  reg('2hterm.sftp.upload', async (uri: vscode.Uri) => {
+  reg('hterm.sftp.upload', async (uri: vscode.Uri) => {
     if (!uri) return;
     const files = await vscode.window.showOpenDialog({ canSelectMany: true, canSelectFolders: false, openLabel: 'Upload' });
     if (!files?.length) return;
@@ -264,17 +264,17 @@ export function activate(ctx: vscode.ExtensionContext) {
     });
     vscode.window.setStatusBarMessage('$(check) Upload complete', 4000);
   });
-  reg('2hterm.sftp.terminalHere', (uri: vscode.Uri) => {
+  reg('hterm.sftp.terminalHere', (uri: vscode.Uri) => {
     const s = uri && mgr.session(uri.authority);
     if (s) terminals.open(s, uri.path);
   });
 
   // --- Sync, import/export, vault -------------------------------------------
-  reg('2hterm.refresh', () => {
+  reg('hterm.refresh', () => {
     store.checkExternal();
     tree.refresh();
   });
-  reg('2hterm.syncNow', async () => {
+  reg('hterm.syncNow', async () => {
     const provider = cfg<string>('sync.provider', 'settingsSync');
     if (provider === 'githubGist') {
       applyProvider();
@@ -282,7 +282,7 @@ export function activate(ctx: vscode.ExtensionContext) {
     }
     if (provider === 'none') {
       const pick = await vscode.window.showInformationMessage('Sync is turned off.', 'Configure');
-      if (pick) vscode.commands.executeCommand('workbench.action.openSettings', '2hterm.sync');
+      if (pick) vscode.commands.executeCommand('workbench.action.openSettings', 'hterm.sync');
       return;
     }
     store.checkExternal();
@@ -296,30 +296,30 @@ export function activate(ctx: vscode.ExtensionContext) {
       if (pick) vscode.commands.executeCommand('workbench.userDataSync.actions.turnOn');
     }
   });
-  reg('2hterm.import', () => runImport(store));
-  reg('2hterm.export', async () => {
+  reg('hterm.import', () => runImport(store));
+  reg('hterm.export', async () => {
     const target = await vscode.window.showSaveDialog({
-      defaultUri: vscode.Uri.file(path.join(os.homedir(), '2hterm-sessions.json')),
+      defaultUri: vscode.Uri.file(path.join(os.homedir(), 'hterm-sessions.json')),
       filters: { JSON: ['json'] },
     });
     if (target) await vscode.workspace.fs.writeFile(target, Buffer.from(exportJson(store), 'utf8'));
   });
-  reg('2hterm.vault.setMasterPassword', async () => {
+  reg('hterm.vault.setMasterPassword', async () => {
     if (!vault.synced) {
       const pick = await vscode.window.showInformationMessage(
         'Secret sync is turned off; the local keychain is used and no master password is needed.',
         'Turn It On',
       );
-      if (pick) vscode.commands.executeCommand('workbench.action.openSettings', '2hterm.sync.secrets');
+      if (pick) vscode.commands.executeCommand('workbench.action.openSettings', 'hterm.sync.secrets');
       return;
     }
     await vault.changeMasterPassword();
   });
-  reg('2hterm.vault.lock', async () => {
+  reg('hterm.vault.lock', async () => {
     await vault.lock();
-    vscode.window.showInformationMessage('2hTerm: vault locked on this machine. You will be asked for the master password the next time it is used.');
+    vscode.window.showInformationMessage('hTerm: vault locked on this machine. You will be asked for the master password the next time it is used.');
   });
-  reg('2hterm.forgetHostKey', async () => {
+  reg('hterm.forgetHostKey', async () => {
     const hosts = Object.entries(store.data.knownHosts);
     if (!hosts.length) return vscode.window.showInformationMessage('No saved fingerprints.');
     const pick = await vscode.window.showQuickPick(
@@ -329,7 +329,7 @@ export function activate(ctx: vscode.ExtensionContext) {
     for (const p of pick ?? []) await store.setKnownHost(p.label, undefined);
   });
 
-  log.appendLine(`2hTerm active. Sync: ${cfg<string>('sync.provider', 'settingsSync')}`);
+  log.appendLine(`hTerm active. Sync: ${cfg<string>('sync.provider', 'settingsSync')}`);
 }
 
 export function deactivate() {}

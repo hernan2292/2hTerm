@@ -2,6 +2,7 @@
 
 ## 0.1.1
 
+- Renamed from 2hTerm to hTerm, now published as `HernanHerrera.hterm`. Command IDs, settings (`hterm.*`) and the SFTP scheme (`hterm-sftp://`) were renamed accordingly; sessions from the old extension can be moved over with Export / Import.
 - The whole interface, README and Marketplace listing are now in English.
 
 ## 0.1.0

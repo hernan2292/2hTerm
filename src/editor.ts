@@ -29,7 +29,7 @@ export class SessionEditor {
     const existing = this.panels.get(session.id);
     if (existing) return existing.reveal();
 
-    const panel = vscode.window.createWebviewPanel('2hterm.editor', isNew ? 'New Session' : `Edit: ${session.name}`, vscode.ViewColumn.Active, {
+    const panel = vscode.window.createWebviewPanel('hterm.editor', isNew ? 'New Session' : `Edit: ${session.name}`, vscode.ViewColumn.Active, {
       enableScripts: true,
       retainContextWhenHidden: true,
     });
@@ -62,7 +62,7 @@ export class SessionEditor {
           await save(store, vault, msg as SavePayload);
           panel.dispose();
         } catch (e) {
-          vscode.window.showErrorMessage(`2hTerm: ${errMsg(e)}`);
+          vscode.window.showErrorMessage(`hTerm: ${errMsg(e)}`);
         }
       }
     });
@@ -88,7 +88,7 @@ async function save(store: Store, vault: Vault, p: SavePayload) {
   await put('privateKey', p.clearEmbeddedKey, p.embedKey && s.keyPath ? fs.readFileSync(expandHome(s.keyPath), 'utf8') : undefined);
 
   await store.upsertSession(s);
-  if (!secretsSaved) vscode.window.showWarningMessage('2hTerm: the session was saved, but the secrets were not (the vault was not unlocked).');
+  if (!secretsSaved) vscode.window.showWarningMessage('hTerm: the session was saved, but the secrets were not (the vault was not unlocked).');
 }
 
 function html(webview: vscode.Webview, init: unknown): string {

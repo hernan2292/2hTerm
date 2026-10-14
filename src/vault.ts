@@ -4,8 +4,8 @@ import { Store } from './store';
 import { SecretKind, VaultEntry } from './types';
 import { cfg } from './util';
 
-const CHECK_TEXT = '2hterm-vault-check';
-const LOCAL_KEY = '2hterm.vaultKey';
+const CHECK_TEXT = 'hterm-vault-check';
+const LOCAL_KEY = 'hterm.vaultKey';
 
 function derive(password: string, salt: string): Promise<Buffer> {
   return new Promise((resolve, reject) =>
@@ -53,7 +53,7 @@ export class Vault {
   }
 
   private localName(sessionId: string, kind: SecretKind) {
-    return `2hterm/${sessionId}/${kind}`;
+    return `hterm/${sessionId}/${kind}`;
   }
 
   async get(sessionId: string, kind: SecretKind): Promise<string | undefined> {
@@ -128,7 +128,7 @@ export class Vault {
     }
     for (let attempt = 0; attempt < 3; attempt++) {
       const pw = await vscode.window.showInputBox({
-        title: '2hTerm: Unlock Vault',
+        title: 'hTerm: Unlock Vault',
         prompt: attempt ? 'Wrong password, try again' : 'Master password (the same on all your machines)',
         password: true,
         ignoreFocusOut: true,
@@ -141,7 +141,7 @@ export class Vault {
         return k;
       }
     }
-    vscode.window.showErrorMessage('2hTerm: could not unlock the vault.');
+    vscode.window.showErrorMessage('hTerm: could not unlock the vault.');
     return undefined;
   }
 
@@ -166,14 +166,14 @@ export class Vault {
     if (pw === undefined) return undefined;
     const again = await vscode.window.showInputBox({ title, prompt: 'Repeat the master password', password: true, ignoreFocusOut: true });
     if (again !== pw) {
-      vscode.window.showErrorMessage('2hTerm: the passwords do not match.');
+      vscode.window.showErrorMessage('hTerm: the passwords do not match.');
       return undefined;
     }
     return pw;
   }
 
   private async create(): Promise<Buffer | undefined> {
-    const pw = await this.askNewPassword('2hTerm: Create Synced Vault');
+    const pw = await this.askNewPassword('hTerm: Create Synced Vault');
     if (pw === undefined) return undefined;
     const salt = crypto.randomBytes(16).toString('base64');
     const key = await derive(pw, salt);
@@ -187,12 +187,12 @@ export class Vault {
   /** Creates the vault, or re-encrypts every secret with a new master password. */
   async changeMasterPassword() {
     if (!this.store.data.vault) {
-      if (await this.create()) vscode.window.showInformationMessage('2hTerm: vault created.');
+      if (await this.create()) vscode.window.showInformationMessage('hTerm: vault created.');
       return;
     }
     const oldKey = await this.unlock(false);
     if (!oldKey) return;
-    const pw = await this.askNewPassword('2hTerm: Change Master Password');
+    const pw = await this.askNewPassword('hTerm: Change Master Password');
     if (pw === undefined) return;
     const oldVid = this.store.data.vault.salt;
     const plain: [string, string][] = [];
@@ -217,6 +217,6 @@ export class Vault {
     await this.store.save();
     this.key = key;
     await this.ctx.secrets.store(LOCAL_KEY, key.toString('base64'));
-    vscode.window.showInformationMessage('2hTerm: master password updated. Your other machines will ask for it again.');
+    vscode.window.showInformationMessage('hTerm: master password updated. Your other machines will ask for it again.');
   }
 }

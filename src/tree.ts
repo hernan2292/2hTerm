@@ -7,7 +7,7 @@ import { sshTarget } from './util';
 
 export type Node = { kind: 'folder'; folder: Folder } | { kind: 'session'; session: Session };
 
-const MIME = 'application/vnd.code.tree.2hterm.sessions';
+const MIME = 'application/vnd.code.tree.hterm.sessions';
 
 export class SessionTree implements vscode.TreeDataProvider<Node>, vscode.TreeDragAndDropController<Node> {
   private readonly emitter = new vscode.EventEmitter<Node | undefined | void>();

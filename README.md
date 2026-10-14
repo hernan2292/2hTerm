@@ -1,10 +1,10 @@
-# 2hTerm
+# hTerm
 
 A MobaXterm-style SSH session manager for VS Code, with your connections synced across all your machines.
 
 ## Installation
 
-Search for **2hTerm** in the VS Code Extensions view, or download the `.vsix` from the [releases](https://github.com/hernan2292/2hTerm/releases) page and use *Extensions → … → Install from VSIX*.
+Search for **hTerm** in the VS Code Extensions view, or download the `.vsix` from the [releases](https://github.com/hernan2292/2hTerm/releases) page and use *Extensions → … → Install from VSIX*.
 
 ## Features
 
@@ -18,11 +18,11 @@ Search for **2hTerm** in the VS Code Extensions view, or download the `.vsix` fr
 | **MultiExec** | What you type in one terminal is sent to several at once (📡 icon in the view). |
 | **X11** | X11 forwarding to a local X server (VcXsrv / X410 with access control disabled, `-ac`). |
 | **Security** | Host fingerprint verification (TOFU) with a warning if it changes. Fingerprints are synced too. |
-| **Import** | From `~/.ssh/config`, `MobaXterm.ini` / `.mxtsessions` and 2hTerm JSON backups. |
+| **Import** | From `~/.ssh/config`, `MobaXterm.ini` / `.mxtsessions` and hTerm JSON backups. |
 
 ## Syncing across machines
 
-Configured with `2hterm.sync.provider`:
+Configured with `hterm.sync.provider`:
 
 - **`settingsSync`** (default): uses VS Code Settings Sync. Sign in with the **same Microsoft or GitHub account** on each PC (Accounts icon → *Backup and Sync Settings*) and keep **Extensions** and **UI State** checked. Sessions show up on their own.
 - **`githubGist`**: stores the data in a **private** Gist in your GitHub account. It merges session by session, so nothing is lost if you edit on two PCs at the same time. Uses the GitHub sign-in built into VS Code.
@@ -30,11 +30,11 @@ Configured with `2hterm.sync.provider`:
 
 ### Passwords and keys
 
-With `2hterm.sync.secrets` = `true` (default), saved passwords, passphrases and private keys are encrypted with **AES-256-GCM** using a key derived with **scrypt** from your **master password**. Only the ciphertext is synced. Each machine asks for the master password once and stores the derived key in the system keychain (Windows Credential Manager / Keychain / libsecret).
+With `hterm.sync.secrets` = `true` (default), saved passwords, passphrases and private keys are encrypted with **AES-256-GCM** using a key derived with **scrypt** from your **master password**. Only the ciphertext is synced. Each machine asks for the master password once and stores the derived key in the system keychain (Windows Credential Manager / Keychain / libsecret).
 
 Private key paths differ between machines. That's why the session editor lets you check **"Store the key in the vault"**, which makes the key available on all your machines.
 
-With `2hterm.sync.secrets` = `false`, secrets are stored only in the local keychain and are not synced.
+With `hterm.sync.secrets` = `false`, secrets are stored only in the local keychain and are not synced.
 
 > The master password cannot be recovered. If you forget it, you'll have to re-enter your sessions' passwords.
 
@@ -45,7 +45,7 @@ npm install
 npm run build        # builds dist/extension.js
 npm run watch        # rebuilds on save
 npm run typecheck
-npm run package      # builds 2hterm-x.y.z.vsix
+npm run package      # builds hterm-x.y.z.vsix
 ```
 
 Press **F5** in VS Code to open a test window with the extension loaded.
@@ -65,7 +65,7 @@ src/
   vault.ts       encrypted secrets / local keychain
   connection.ts  shared ssh2 connections, auth, jump host, fingerprints, X11
   terminal.ts    SSH terminal (Pseudoterminal) and MultiExec
-  sftp.ts        sftp2h:// FileSystemProvider
+  sftp.ts        hterm-sftp:// FileSystemProvider
   tunnels.ts     -L / -R / -D (SOCKS5) tunnels
   tree.ts        sessions and tunnels views
   editor.ts      session form (webview)

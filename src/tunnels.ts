@@ -124,7 +124,7 @@ export class TunnelManager implements vscode.Disposable {
         errors.push(`${describeForward(f)}: ${errMsg(e)}`);
       }
     }
-    if (errors.length) vscode.window.showErrorMessage(`2hTerm: ${errors.join(' · ')}`);
+    if (errors.length) vscode.window.showErrorMessage(`hTerm: ${errors.join(' · ')}`);
   }
 
   stopSession(sessionId: string) {
