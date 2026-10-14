@@ -18,7 +18,7 @@ export function describeForward(f: Forward): string {
   const bind = `${f.bindHost || 'localhost'}:${f.bindPort}`;
   if (f.type === 'D') return `SOCKS ${bind}`;
   const dest = `${f.destHost}:${f.destPort}`;
-  return f.type === 'L' ? `L ${bind} → ${dest}` : `R remoto ${bind} → ${dest}`;
+  return f.type === 'L' ? `L ${bind} → ${dest}` : `R remote ${bind} → ${dest}`;
 }
 
 function forwardOut(client: Client, src: net.Socket, host: string, port: number): Promise<ClientChannel> {
@@ -46,7 +46,7 @@ function socks5Handshake(sock: net.Socket): Promise<{ host: string; port: number
       buf = Buffer.concat([buf, chunk]);
       if (stage === 0) {
         if (buf.length < 2) return;
-        if (buf[0] !== 5) return fail('solo se admite SOCKS5');
+        if (buf[0] !== 5) return fail('only SOCKS5 is supported');
         const n = buf[1];
         if (buf.length < 2 + n) return;
         buf = buf.subarray(2 + n);
@@ -57,7 +57,7 @@ function socks5Handshake(sock: net.Socket): Promise<{ host: string; port: number
         if (buf.length < 5) return;
         if (buf[1] !== 1) {
           sock.end(Buffer.from([5, 7, 0, 1, 0, 0, 0, 0, 0, 0]));
-          return fail('comando SOCKS no soportado');
+          return fail('unsupported SOCKS command');
         }
         const atyp = buf[3];
         let host: string;
@@ -77,7 +77,7 @@ function socks5Handshake(sock: net.Socket): Promise<{ host: string; port: number
           host = h.match(/.{4}/g)!.join(':');
           off = 20;
         } else {
-          return fail('tipo de dirección SOCKS desconocido');
+          return fail('unknown SOCKS address type');
         }
         const port = buf.readUInt16BE(off);
         sock.off('data', onData);
@@ -160,7 +160,7 @@ export class TunnelManager implements vscode.Disposable {
       this.emitter.fire();
     };
     this.active.set(key, tunnel);
-    this.log.appendLine(`[${session.name}] túnel iniciado: ${describeForward(f)}`);
+    this.log.appendLine(`[${session.name}] tunnel started: ${describeForward(f)}`);
     this.emitter.fire();
   }
 
@@ -195,7 +195,7 @@ export class TunnelManager implements vscode.Disposable {
       } catch (e) {
         if (f.type === 'D' && !sock.destroyed) sock.end(Buffer.from([5, 5, 0, 1, 0, 0, 0, 0, 0, 0]));
         else sock.destroy();
-        this.log.appendLine(`[túnel ${describeForward(f)}] ${errMsg(e)}`);
+        this.log.appendLine(`[tunnel ${describeForward(f)}] ${errMsg(e)}`);
       }
     });
     await listen(server, f.bindHost, f.bindPort);
@@ -212,7 +212,7 @@ export class TunnelManager implements vscode.Disposable {
       const sock = net.connect(f.destPort!, f.destHost!);
       sock.once('connect', () => this.track(tunnel, sock, accept()));
       sock.once('error', (e) => {
-        this.log.appendLine(`[túnel ${describeForward(f)}] ${errMsg(e)}`);
+        this.log.appendLine(`[tunnel ${describeForward(f)}] ${errMsg(e)}`);
         reject();
       });
     };

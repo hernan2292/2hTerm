@@ -128,8 +128,8 @@ export class Vault {
     }
     for (let attempt = 0; attempt < 3; attempt++) {
       const pw = await vscode.window.showInputBox({
-        title: '2hTerm: desbloquear bóveda',
-        prompt: attempt ? 'Contraseña incorrecta, inténtalo de nuevo' : 'Contraseña maestra (la misma en todos tus equipos)',
+        title: '2hTerm: Unlock Vault',
+        prompt: attempt ? 'Wrong password, try again' : 'Master password (the same on all your machines)',
         password: true,
         ignoreFocusOut: true,
       });
@@ -141,7 +141,7 @@ export class Vault {
         return k;
       }
     }
-    vscode.window.showErrorMessage('2hTerm: no se pudo desbloquear la bóveda.');
+    vscode.window.showErrorMessage('2hTerm: could not unlock the vault.');
     return undefined;
   }
 
@@ -158,22 +158,22 @@ export class Vault {
   private async askNewPassword(title: string): Promise<string | undefined> {
     const pw = await vscode.window.showInputBox({
       title,
-      prompt: 'Nueva contraseña maestra. Cifra tus contraseñas y claves sincronizadas; no se puede recuperar.',
+      prompt: 'New master password. It encrypts your synced passwords and keys; it cannot be recovered.',
       password: true,
       ignoreFocusOut: true,
-      validateInput: (v) => (v.length < 8 ? 'Mínimo 8 caracteres' : undefined),
+      validateInput: (v) => (v.length < 8 ? 'At least 8 characters' : undefined),
     });
     if (pw === undefined) return undefined;
-    const again = await vscode.window.showInputBox({ title, prompt: 'Repite la contraseña maestra', password: true, ignoreFocusOut: true });
+    const again = await vscode.window.showInputBox({ title, prompt: 'Repeat the master password', password: true, ignoreFocusOut: true });
     if (again !== pw) {
-      vscode.window.showErrorMessage('2hTerm: las contraseñas no coinciden.');
+      vscode.window.showErrorMessage('2hTerm: the passwords do not match.');
       return undefined;
     }
     return pw;
   }
 
   private async create(): Promise<Buffer | undefined> {
-    const pw = await this.askNewPassword('2hTerm: crear bóveda sincronizada');
+    const pw = await this.askNewPassword('2hTerm: Create Synced Vault');
     if (pw === undefined) return undefined;
     const salt = crypto.randomBytes(16).toString('base64');
     const key = await derive(pw, salt);
@@ -187,12 +187,12 @@ export class Vault {
   /** Creates the vault, or re-encrypts every secret with a new master password. */
   async changeMasterPassword() {
     if (!this.store.data.vault) {
-      if (await this.create()) vscode.window.showInformationMessage('2hTerm: bóveda creada.');
+      if (await this.create()) vscode.window.showInformationMessage('2hTerm: vault created.');
       return;
     }
     const oldKey = await this.unlock(false);
     if (!oldKey) return;
-    const pw = await this.askNewPassword('2hTerm: cambiar contraseña maestra');
+    const pw = await this.askNewPassword('2hTerm: Change Master Password');
     if (pw === undefined) return;
     const oldVid = this.store.data.vault.salt;
     const plain: [string, string][] = [];
@@ -217,6 +217,6 @@ export class Vault {
     await this.store.save();
     this.key = key;
     await this.ctx.secrets.store(LOCAL_KEY, key.toString('base64'));
-    vscode.window.showInformationMessage('2hTerm: contraseña maestra actualizada. Los demás equipos te la pedirán de nuevo.');
+    vscode.window.showInformationMessage('2hTerm: master password updated. Your other machines will ask for it again.');
   }
 }

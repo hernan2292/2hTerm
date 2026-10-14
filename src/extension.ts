@@ -58,7 +58,7 @@ export function activate(ctx: vscode.ExtensionContext) {
       store.sessions
         .sort((a, b) => a.name.localeCompare(b.name))
         .map((s) => ({ label: s.name, description: sshTarget(s), detail: store.folderPath(s.folderId) || undefined, s })),
-      { title: 'Elige una sesión', matchOnDescription: true, matchOnDetail: true },
+      { title: 'Choose a session', matchOnDescription: true, matchOnDetail: true },
     );
     return pick?.s;
   };
@@ -76,7 +76,7 @@ export function activate(ctx: vscode.ExtensionContext) {
 
   const openSftp = async (s: Session) => {
     const home = await vscode.window.withProgress(
-      { location: vscode.ProgressLocation.Notification, title: `SFTP: conectando a ${s.name}…` },
+      { location: vscode.ProgressLocation.Notification, title: `SFTP: connecting to ${s.name}…` },
       () => sftp.home(s.id),
     );
     const uri = vscode.Uri.from({ scheme: SFTP_SCHEME, authority: s.id, path: home });
@@ -100,7 +100,7 @@ export function activate(ctx: vscode.ExtensionContext) {
   reg('2hterm.duplicateSession', async (n?: Node) => {
     const s = await sessionOf(n);
     if (!s) return;
-    const copy: Session = { ...structuredClone(s), id: newId(), name: `${s.name} (copia)` };
+    const copy: Session = { ...structuredClone(s), id: newId(), name: `${s.name} (copy)` };
     copy.forwards = copy.forwards.map((f) => ({ ...f, id: newId() }));
     await store.upsertSession(copy);
     await vault.copy(s.id, copy.id);
@@ -113,7 +113,7 @@ export function activate(ctx: vscode.ExtensionContext) {
     }
     if (!targets.length) return;
     const names = targets.map((t) => t.session.name).join(', ');
-    const ok = await vscode.window.showWarningMessage(`¿Eliminar ${names}?`, { modal: true, detail: 'Se borrará en todos tus equipos sincronizados.' }, 'Eliminar');
+    const ok = await vscode.window.showWarningMessage(`Delete ${names}?`, { modal: true, detail: 'It will be deleted on all your synced machines.' }, 'Delete');
     if (!ok) return;
     for (const t of targets) {
       tunnels.stopSession(t.session.id);
@@ -137,12 +137,12 @@ export function activate(ctx: vscode.ExtensionContext) {
     if (s.x11) parts.push('-X');
     parts.push(`${s.username ? s.username + '@' : ''}${s.host}`);
     await vscode.env.clipboard.writeText(parts.join(' '));
-    vscode.window.setStatusBarMessage('$(check) Comando ssh copiado', 3000);
+    vscode.window.setStatusBarMessage('$(check) ssh command copied', 3000);
   });
 
   // --- Folders -------------------------------------------------------------
   const newFolder = async (parentId?: string) => {
-    const name = await vscode.window.showInputBox({ title: 'Nueva carpeta', prompt: 'Nombre de la carpeta' });
+    const name = await vscode.window.showInputBox({ title: 'New Folder', prompt: 'Folder name' });
     if (name?.trim()) await store.upsertFolder({ id: newId(), name: name.trim(), parentId, updatedAt: 0 });
   };
   reg('2hterm.addFolder', () => newFolder());
@@ -150,16 +150,16 @@ export function activate(ctx: vscode.ExtensionContext) {
   reg('2hterm.renameFolder', async (n?: Node) => {
     const f = folderOf(n);
     if (!f) return;
-    const name = await vscode.window.showInputBox({ title: 'Renombrar carpeta', value: f.name });
+    const name = await vscode.window.showInputBox({ title: 'Rename Folder', value: f.name });
     if (name?.trim()) await store.upsertFolder({ ...f, name: name.trim() });
   });
   reg('2hterm.deleteFolder', async (n?: Node) => {
     const f = folderOf(n);
     if (!f) return;
     const ok = await vscode.window.showWarningMessage(
-      `¿Eliminar la carpeta «${f.name}» y todo su contenido?`,
-      { modal: true, detail: 'Las sesiones que contiene también se eliminarán en todos tus equipos.' },
-      'Eliminar',
+      `Delete the folder "${f.name}" and everything in it?`,
+      { modal: true, detail: 'The sessions it contains will also be deleted on all your machines.' },
+      'Delete',
     );
     if (ok) await store.deleteFolder(f.id);
   });
@@ -177,7 +177,7 @@ export function activate(ctx: vscode.ExtensionContext) {
     const s = await sessionOf(n);
     if (!s) return;
     if (!s.forwards.length) {
-      const edit = await vscode.window.showInformationMessage(`${s.name} no tiene túneles configurados.`, 'Editar sesión');
+      const edit = await vscode.window.showInformationMessage(`${s.name} has no tunnels configured.`, 'Edit Session');
       if (edit) await SessionEditor.open(store, vault, structuredClone(s), false);
       return;
     }
@@ -191,7 +191,7 @@ export function activate(ctx: vscode.ExtensionContext) {
       : (
           await vscode.window.showQuickPick(
             mgr.connectedIds.map((cid) => ({ label: mgr.session(cid)?.name ?? cid, id: cid })),
-            { title: 'Desconectar' },
+            { title: 'Disconnect' },
           )
         )?.id;
     if (!id) return;
@@ -202,8 +202,8 @@ export function activate(ctx: vscode.ExtensionContext) {
 
   reg('2hterm.quickConnect', async () => {
     const qp = vscode.window.createQuickPick<vscode.QuickPickItem & { s?: Session }>();
-    qp.title = '2hTerm: conexión rápida';
-    qp.placeholder = 'Busca una sesión o escribe usuario@host[:puerto]';
+    qp.title = '2hTerm: Quick Connect';
+    qp.placeholder = 'Search for a session or type user@host[:port]';
     qp.matchOnDescription = true;
     const base = store.sessions
       .sort((a, b) => a.name.localeCompare(b.name))
@@ -211,7 +211,7 @@ export function activate(ctx: vscode.ExtensionContext) {
     qp.items = base;
     qp.onDidChangeValue((v) => {
       const m = v.trim().match(/^(?:([^@\s]+)@)?([^@\s:]+)(?::(\d+))?$/);
-      qp.items = m ? [{ label: `$(plug) Conectar a ${v.trim()}`, description: 'temporal, sin guardar', alwaysShow: true }, ...base] : base;
+      qp.items = m ? [{ label: `$(plug) Connect to ${v.trim()}`, description: 'temporary, not saved', alwaysShow: true }, ...base] : base;
     });
     qp.onDidAccept(() => {
       const item = qp.selectedItems[0];
@@ -244,25 +244,25 @@ export function activate(ctx: vscode.ExtensionContext) {
     const name = path.posix.basename(uri.path);
     let target: vscode.Uri | undefined;
     if (stat.type & vscode.FileType.Directory) {
-      const dir = await vscode.window.showOpenDialog({ canSelectFiles: false, canSelectFolders: true, openLabel: 'Descargar aquí' });
+      const dir = await vscode.window.showOpenDialog({ canSelectFiles: false, canSelectFolders: true, openLabel: 'Download Here' });
       target = dir?.[0] && vscode.Uri.joinPath(dir[0], name);
     } else {
       target = await vscode.window.showSaveDialog({ defaultUri: vscode.Uri.file(path.join(os.homedir(), 'Downloads', name)) });
     }
     if (!target) return;
-    await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification, title: `Descargando ${name}…` }, () =>
+    await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification, title: `Downloading ${name}…` }, () =>
       vscode.workspace.fs.copy(uri, target!, { overwrite: true }),
     );
-    vscode.window.setStatusBarMessage(`$(check) ${name} descargado`, 4000);
+    vscode.window.setStatusBarMessage(`$(check) ${name} downloaded`, 4000);
   });
   reg('2hterm.sftp.upload', async (uri: vscode.Uri) => {
     if (!uri) return;
-    const files = await vscode.window.showOpenDialog({ canSelectMany: true, canSelectFolders: false, openLabel: 'Subir' });
+    const files = await vscode.window.showOpenDialog({ canSelectMany: true, canSelectFolders: false, openLabel: 'Upload' });
     if (!files?.length) return;
-    await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification, title: `Subiendo ${files.length} archivo(s)…` }, async () => {
+    await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification, title: `Uploading ${files.length} file(s)…` }, async () => {
       for (const f of files) await vscode.workspace.fs.copy(f, vscode.Uri.joinPath(uri, path.basename(f.fsPath)), { overwrite: true });
     });
-    vscode.window.setStatusBarMessage('$(check) Subida completada', 4000);
+    vscode.window.setStatusBarMessage('$(check) Upload complete', 4000);
   });
   reg('2hterm.sftp.terminalHere', (uri: vscode.Uri) => {
     const s = uri && mgr.session(uri.authority);
@@ -281,7 +281,7 @@ export function activate(ctx: vscode.ExtensionContext) {
       return gist?.sync(true);
     }
     if (provider === 'none') {
-      const pick = await vscode.window.showInformationMessage('La sincronización está desactivada.', 'Configurar');
+      const pick = await vscode.window.showInformationMessage('Sync is turned off.', 'Configure');
       if (pick) vscode.commands.executeCommand('workbench.action.openSettings', '2hterm.sync');
       return;
     }
@@ -290,8 +290,8 @@ export function activate(ctx: vscode.ExtensionContext) {
       await vscode.commands.executeCommand('workbench.userDataSync.actions.syncNow');
     } catch {
       const pick = await vscode.window.showInformationMessage(
-        'Activa Settings Sync (icono de cuenta → «Activar sincronización de configuración») con la misma cuenta en todos tus equipos.',
-        'Activar Settings Sync',
+        'Turn on Settings Sync (Accounts icon → "Backup and Sync Settings") with the same account on all your machines.',
+        'Turn On Settings Sync',
       );
       if (pick) vscode.commands.executeCommand('workbench.userDataSync.actions.turnOn');
     }
@@ -299,7 +299,7 @@ export function activate(ctx: vscode.ExtensionContext) {
   reg('2hterm.import', () => runImport(store));
   reg('2hterm.export', async () => {
     const target = await vscode.window.showSaveDialog({
-      defaultUri: vscode.Uri.file(path.join(os.homedir(), '2hterm-sesiones.json')),
+      defaultUri: vscode.Uri.file(path.join(os.homedir(), '2hterm-sessions.json')),
       filters: { JSON: ['json'] },
     });
     if (target) await vscode.workspace.fs.writeFile(target, Buffer.from(exportJson(store), 'utf8'));
@@ -307,8 +307,8 @@ export function activate(ctx: vscode.ExtensionContext) {
   reg('2hterm.vault.setMasterPassword', async () => {
     if (!vault.synced) {
       const pick = await vscode.window.showInformationMessage(
-        'La sincronización de secretos está desactivada; se usan el llavero local y no hace falta contraseña maestra.',
-        'Activarla',
+        'Secret sync is turned off; the local keychain is used and no master password is needed.',
+        'Turn It On',
       );
       if (pick) vscode.commands.executeCommand('workbench.action.openSettings', '2hterm.sync.secrets');
       return;
@@ -317,19 +317,19 @@ export function activate(ctx: vscode.ExtensionContext) {
   });
   reg('2hterm.vault.lock', async () => {
     await vault.lock();
-    vscode.window.showInformationMessage('2hTerm: bóveda bloqueada en este equipo. Se pedirá la contraseña maestra al usarla.');
+    vscode.window.showInformationMessage('2hTerm: vault locked on this machine. You will be asked for the master password the next time it is used.');
   });
   reg('2hterm.forgetHostKey', async () => {
     const hosts = Object.entries(store.data.knownHosts);
-    if (!hosts.length) return vscode.window.showInformationMessage('No hay huellas guardadas.');
+    if (!hosts.length) return vscode.window.showInformationMessage('No saved fingerprints.');
     const pick = await vscode.window.showQuickPick(
       hosts.map(([id, h]) => ({ label: id, description: h.fp })),
-      { title: 'Olvidar huella de host', canPickMany: true },
+      { title: 'Forget Host Fingerprint', canPickMany: true },
     );
     for (const p of pick ?? []) await store.setKnownHost(p.label, undefined);
   });
 
-  log.appendLine(`2hTerm activo. Sincronización: ${cfg<string>('sync.provider', 'settingsSync')}`);
+  log.appendLine(`2hTerm active. Sync: ${cfg<string>('sync.provider', 'settingsSync')}`);
 }
 
 export function deactivate() {}

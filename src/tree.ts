@@ -45,8 +45,8 @@ export class SessionTree implements vscode.TreeDataProvider<Node>, vscode.TreeDr
     const tip = new vscode.MarkdownString();
     tip.appendMarkdown(`**${s.name}**\n\n`);
     tip.appendText(`${sshTarget(s)} · auth: ${s.auth}`);
-    if (s.jumpId) tip.appendText(`\nvía ${this.store.getSession(s.jumpId)?.name ?? '?'}`);
-    if (s.forwards.length) tip.appendText(`\nTúneles: ${s.forwards.map(describeForward).join(', ')}`);
+    if (s.jumpId) tip.appendText(`\nvia ${this.store.getSession(s.jumpId)?.name ?? '?'}`);
+    if (s.forwards.length) tip.appendText(`\nTunnels: ${s.forwards.map(describeForward).join(', ')}`);
     if (s.notes) tip.appendText(`\n\n${s.notes}`);
     item.tooltip = tip;
     return item;
@@ -110,7 +110,7 @@ export class TunnelTree implements vscode.TreeDataProvider<ActiveTunnel> {
 
   getTreeItem(t: ActiveTunnel): vscode.TreeItem {
     const item = new vscode.TreeItem(describeForward(t.forward));
-    item.description = `${t.sessionName} · ${t.connections} conexión(es)`;
+    item.description = `${t.sessionName} · ${t.connections} connection(s)`;
     item.iconPath = new vscode.ThemeIcon(t.forward.type === 'D' ? 'globe' : 'arrow-swap');
     item.contextValue = 'tunnel';
     return item;

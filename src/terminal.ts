@@ -51,11 +51,11 @@ class SshPty implements vscode.Pseudoterminal {
   private async connect() {
     const s = this.session;
     if (!s) {
-      this.write(`${RED}La sesión ya no existe.${RESET}\r\n`);
+      this.write(`${RED}The session no longer exists.${RESET}\r\n`);
       return this.closeEmitter.fire();
     }
     this.state = 'connecting';
-    this.write(`${DIM}Conectando a ${sshTarget(s)}…${RESET}\r\n`);
+    this.write(`${DIM}Connecting to ${sshTarget(s)}…${RESET}\r\n`);
     try {
       this.lease = await this.mgr.acquire(s.id);
       const stream = await new Promise<ClientChannel>((resolve, reject) =>
@@ -92,13 +92,13 @@ class SshPty implements vscode.Pseudoterminal {
     this.stream = undefined;
     this.lease?.release();
     this.lease = undefined;
-    this.write(`\r\n${YELLOW}[Sesión cerrada]${RESET}`);
+    this.write(`\r\n${YELLOW}[Session closed]${RESET}`);
     this.showReconnectHint();
   }
 
   private showReconnectHint() {
     this.state = 'closed';
-    this.write(` ${DIM}Pulsa R para reconectar o cualquier otra tecla para cerrar.${RESET}\r\n`);
+    this.write(` ${DIM}Press R to reconnect or any other key to close.${RESET}\r\n`);
   }
 
   handleInput(data: string) {
@@ -186,12 +186,12 @@ export class TerminalRegistry implements vscode.Disposable {
       pty: p,
     }));
     if (items.length < 2) {
-      vscode.window.showInformationMessage('2hTerm: abre al menos dos terminales SSH para usar MultiExec.');
+      vscode.window.showInformationMessage('2hTerm: open at least two SSH terminals to use MultiExec.');
       return;
     }
     const picked = await vscode.window.showQuickPick(items, {
       canPickMany: true,
-      title: 'MultiExec: lo que escribas en una de estas terminales se enviará a todas',
+      title: 'MultiExec: whatever you type in one of these terminals is sent to all of them',
     });
     if (!picked) return;
     this.broadcast.clear();
@@ -207,7 +207,7 @@ export class TerminalRegistry implements vscode.Disposable {
   private updateStatus() {
     if (this.broadcast.size >= 2) {
       this.status.text = `$(broadcast) MultiExec (${this.broadcast.size})`;
-      this.status.tooltip = 'Clic para detener MultiExec';
+      this.status.tooltip = 'Click to stop MultiExec';
       this.status.show();
     } else {
       this.broadcast.clear();

@@ -1,84 +1,84 @@
 # 2hTerm
 
-Gestor de sesiones SSH para VS Code al estilo MobaXterm, con tus conexiones sincronizadas entre todos tus equipos.
+A MobaXterm-style SSH session manager for VS Code, with your connections synced across all your machines.
 
-## Instalación
+## Installation
 
-Busca **2hTerm** en la vista de Extensiones de VS Code, o descarga el `.vsix` de las [releases](https://github.com/hernan2292/2hTerm/releases) y usa *Extensiones → … → Instalar desde VSIX*.
+Search for **2hTerm** in the VS Code Extensions view, or download the `.vsix` from the [releases](https://github.com/hernan2292/2hTerm/releases) page and use *Extensions → … → Install from VSIX*.
 
-## Funciones
+## Features
 
 | | |
 |---|---|
-| **Sesiones SSH** | Árbol con carpetas y subcarpetas, arrastrar y soltar, colores, notas. Terminales como pestañas del editor (o en el panel). Reconexión con la tecla `R`. |
-| **Autenticación** | Contraseña, clave privada (con frase de paso), agente SSH (OpenSSH de Windows, `ssh-agent`, Pageant) y keyboard-interactive (2FA/OTP). |
-| **Jump host** | Una sesión puede saltar a través de otra (equivale a `ProxyJump`), y se pueden encadenar. |
-| **SFTP** | «Abrir SFTP» monta el servidor en el Explorer de VS Code: navegar, editar, buscar, arrastrar archivos, descargar y subir (clic derecho). |
-| **Túneles** | Local `-L`, remoto `-R` y SOCKS5 dinámico `-D`, con la vista *Túneles activos* y arranque automático opcional. |
-| **MultiExec** | Lo que escribes en una terminal se envía a varias a la vez (icono 📡 en la vista). |
-| **X11** | Reenvío X11 hacia un servidor X local (VcXsrv / X410 con control de acceso desactivado, `-ac`). |
-| **Seguridad** | Verificación de la huella del host (TOFU) con aviso si cambia. Las huellas también se sincronizan. |
-| **Importar** | Desde `~/.ssh/config`, `MobaXterm.ini` / `.mxtsessions` y copias JSON de 2hTerm. |
+| **SSH sessions** | Tree with folders and subfolders, drag and drop, colors, notes. Terminals open as editor tabs (or in the panel). Press `R` to reconnect. |
+| **Authentication** | Password, private key (with passphrase), SSH agent (Windows OpenSSH, `ssh-agent`, Pageant) and keyboard-interactive (2FA/OTP). |
+| **Jump host** | A session can hop through another one (equivalent to `ProxyJump`), and hops can be chained. |
+| **SFTP** | "Open SFTP" mounts the server in the VS Code Explorer: browse, edit, search, drag files in and out, download and upload (right-click). |
+| **Tunnels** | Local `-L`, remote `-R` and dynamic SOCKS5 `-D`, with an *Active Tunnels* view and optional auto-start. |
+| **MultiExec** | What you type in one terminal is sent to several at once (📡 icon in the view). |
+| **X11** | X11 forwarding to a local X server (VcXsrv / X410 with access control disabled, `-ac`). |
+| **Security** | Host fingerprint verification (TOFU) with a warning if it changes. Fingerprints are synced too. |
+| **Import** | From `~/.ssh/config`, `MobaXterm.ini` / `.mxtsessions` and 2hTerm JSON backups. |
 
-## Sincronización entre equipos
+## Syncing across machines
 
-Se configura en `2hterm.sync.provider`:
+Configured with `2hterm.sync.provider`:
 
-- **`settingsSync`** (por defecto): usa la Sincronización de configuración de VS Code. Inicia sesión con la **misma cuenta Microsoft o GitHub** en cada PC (icono de cuenta → *Activar sincronización de configuración*) y deja marcadas **Extensiones** y **Estado de la interfaz**. Las sesiones llegan solas.
-- **`githubGist`**: guarda los datos en un Gist **privado** de tu cuenta de GitHub. Fusiona sesión por sesión, así que si editas en dos PCs a la vez no se pierde nada. Usa el inicio de sesión de GitHub integrado en VS Code.
-- **`none`**: todo queda solo en este equipo.
+- **`settingsSync`** (default): uses VS Code Settings Sync. Sign in with the **same Microsoft or GitHub account** on each PC (Accounts icon → *Backup and Sync Settings*) and keep **Extensions** and **UI State** checked. Sessions show up on their own.
+- **`githubGist`**: stores the data in a **private** Gist in your GitHub account. It merges session by session, so nothing is lost if you edit on two PCs at the same time. Uses the GitHub sign-in built into VS Code.
+- **`none`**: everything stays on this machine only.
 
-### Contraseñas y claves
+### Passwords and keys
 
-Con `2hterm.sync.secrets` = `true` (por defecto), las contraseñas, las frases de paso y las claves privadas guardadas se cifran con **AES-256-GCM** y una clave derivada con **scrypt** de tu **contraseña maestra**. Solo viaja el texto cifrado. Cada equipo pide la contraseña maestra una vez y guarda la clave derivada en el llavero del sistema (Windows Credential Manager / Keychain / libsecret).
+With `2hterm.sync.secrets` = `true` (default), saved passwords, passphrases and private keys are encrypted with **AES-256-GCM** using a key derived with **scrypt** from your **master password**. Only the ciphertext is synced. Each machine asks for the master password once and stores the derived key in the system keychain (Windows Credential Manager / Keychain / libsecret).
 
-Las rutas de las claves privadas cambian entre equipos. Por eso, en el editor de sesión puedes marcar **«Guardar la clave en la bóveda»** y la clave queda disponible en todos tus equipos.
+Private key paths differ between machines. That's why the session editor lets you check **"Store the key in the vault"**, which makes the key available on all your machines.
 
-Con `2hterm.sync.secrets` = `false`, los secretos se guardan solo en el llavero local y no se sincronizan.
+With `2hterm.sync.secrets` = `false`, secrets are stored only in the local keychain and are not synced.
 
-> La contraseña maestra no se puede recuperar. Si la olvidas, tendrás que volver a introducir las contraseñas de tus sesiones.
+> The master password cannot be recovered. If you forget it, you'll have to re-enter your sessions' passwords.
 
-## Desarrollo
+## Development
 
 ```bash
 npm install
-npm run build        # genera dist/extension.js
-npm run watch        # recompila al guardar
+npm run build        # builds dist/extension.js
+npm run watch        # rebuilds on save
 npm run typecheck
-npm run package      # genera 2hterm-x.y.z.vsix
+npm run package      # builds 2hterm-x.y.z.vsix
 ```
 
-Pulsa **F5** en VS Code para abrir una ventana de pruebas con la extensión cargada.
+Press **F5** in VS Code to open a test window with the extension loaded.
 
-### Publicar una versión
+### Releasing a version
 
-1. Sube `version` en `package.json` y anota los cambios en `CHANGELOG.md`.
+1. Bump `version` in `package.json` and note the changes in `CHANGELOG.md`.
 2. `git tag vX.Y.Z && git push origin main vX.Y.Z`
-3. El workflow [release.yml](.github/workflows/release.yml) compila, publica en el Marketplace (con el secreto `VSCE_PAT`) y adjunta el `.vsix` a la release de GitHub.
+3. The [release.yml](.github/workflows/release.yml) workflow builds, publishes to the Marketplace (using the `VSCE_PAT` secret) and attaches the `.vsix` to the GitHub release.
 
-### Estructura
+### Structure
 
 ```
 src/
-  extension.ts   comandos y arranque
-  store.ts       documento sincronizado (sesiones, carpetas, huellas, bóveda) + merge
-  vault.ts       secretos cifrados / llavero local
-  connection.ts  conexiones ssh2 compartidas, auth, jump host, huellas, X11
-  terminal.ts    terminal SSH (Pseudoterminal) y MultiExec
-  sftp.ts        FileSystemProvider sftp2h://
-  tunnels.ts     túneles -L / -R / -D (SOCKS5)
-  tree.ts        vistas de sesiones y túneles
-  editor.ts      formulario de sesión (webview)
+  extension.ts   commands and activation
+  store.ts       synced document (sessions, folders, fingerprints, vault) + merge
+  vault.ts       encrypted secrets / local keychain
+  connection.ts  shared ssh2 connections, auth, jump host, fingerprints, X11
+  terminal.ts    SSH terminal (Pseudoterminal) and MultiExec
+  sftp.ts        sftp2h:// FileSystemProvider
+  tunnels.ts     -L / -R / -D (SOCKS5) tunnels
+  tree.ts        sessions and tunnels views
+  editor.ts      session form (webview)
   importers.ts   ~/.ssh/config, MobaXterm, JSON
-  sync/gist.ts   proveedor de sincronización por GitHub Gist
+  sync/gist.ts   GitHub Gist sync provider
 ```
 
-## Pendiente / ideas
+## Roadmap / ideas
 
-RDP y VNC (lanzando `mstsc` o un visor), puerto serie, Telnet y Mosh, grabación de sesiones, macros, editor de `known_hosts` y un servidor X propio.
+RDP and VNC (launching `mstsc` or a viewer), serial port, Telnet and Mosh, session recording, macros, a `known_hosts` editor and a built-in X server.
 
-¿Bugs o ideas? Abre un [issue](https://github.com/hernan2292/2hTerm/issues).
+Bugs or ideas? Open an [issue](https://github.com/hernan2292/2hTerm/issues).
 
-## Licencia
+## License
 
 [GPL-3.0](LICENSE)

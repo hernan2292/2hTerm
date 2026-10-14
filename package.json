@@ -1,8 +1,8 @@
 {
   "name": "2hterm",
   "displayName": "2hTerm",
-  "description": "Gestor de sesiones SSH / SFTP / túneles estilo MobaXterm, sincronizado entre tus equipos",
-  "version": "0.1.0",
+  "description": "MobaXterm-style SSH / SFTP / tunnel session manager, synced across all your machines",
+  "version": "0.1.1",
   "publisher": "HernanHerreraDev",
   "author": "Hernan Herrera",
   "license": "GPL-3.0-only",
@@ -54,53 +54,53 @@
       "twohterm": [
         {
           "id": "2hterm.sessions",
-          "name": "Sesiones"
+          "name": "Sessions"
         },
         {
           "id": "2hterm.tunnels",
-          "name": "Túneles activos"
+          "name": "Active Tunnels"
         }
       ]
     },
     "viewsWelcome": [
       {
         "view": "2hterm.sessions",
-        "contents": "Aún no tienes sesiones.\n[Nueva sesión SSH](command:2hterm.addSession)\n[Importar (~/.ssh/config, MobaXterm, JSON)](command:2hterm.import)\nSi ya usas 2hTerm en otro equipo, activa Settings Sync con tu cuenta y tus sesiones aparecerán aquí."
+        "contents": "You don't have any sessions yet.\n[New SSH Session](command:2hterm.addSession)\n[Import (~/.ssh/config, MobaXterm, JSON)](command:2hterm.import)\nIf you already use 2hTerm on another machine, turn on Settings Sync with your account and your sessions will show up here."
       },
       {
         "view": "2hterm.tunnels",
-        "contents": "No hay túneles activos."
+        "contents": "No active tunnels."
       }
     ],
     "commands": [
-      { "command": "2hterm.addSession", "title": "Nueva sesión", "category": "2hTerm", "icon": "$(add)" },
-      { "command": "2hterm.addFolder", "title": "Nueva carpeta", "category": "2hTerm", "icon": "$(new-folder)" },
-      { "command": "2hterm.addSessionHere", "title": "Nueva sesión aquí", "category": "2hTerm", "icon": "$(add)" },
-      { "command": "2hterm.addFolderHere", "title": "Nueva subcarpeta", "category": "2hTerm" },
-      { "command": "2hterm.renameFolder", "title": "Renombrar carpeta", "category": "2hTerm" },
-      { "command": "2hterm.deleteFolder", "title": "Eliminar carpeta", "category": "2hTerm" },
-      { "command": "2hterm.quickConnect", "title": "Conexión rápida", "category": "2hTerm", "icon": "$(plug)" },
-      { "command": "2hterm.connect", "title": "Abrir terminal", "category": "2hTerm", "icon": "$(terminal)" },
-      { "command": "2hterm.openSftp", "title": "Abrir SFTP en el Explorer", "category": "2hTerm", "icon": "$(folder-opened)" },
-      { "command": "2hterm.startTunnels", "title": "Iniciar túneles", "category": "2hTerm", "icon": "$(arrow-swap)" },
-      { "command": "2hterm.disconnect", "title": "Desconectar", "category": "2hTerm", "icon": "$(debug-disconnect)" },
-      { "command": "2hterm.editSession", "title": "Editar sesión", "category": "2hTerm", "icon": "$(edit)" },
-      { "command": "2hterm.duplicateSession", "title": "Duplicar sesión", "category": "2hTerm" },
-      { "command": "2hterm.deleteSession", "title": "Eliminar sesión", "category": "2hTerm" },
-      { "command": "2hterm.copySshCommand", "title": "Copiar comando ssh", "category": "2hTerm" },
-      { "command": "2hterm.multiExec", "title": "MultiExec: escribir en varias terminales", "category": "2hTerm", "icon": "$(broadcast)" },
-      { "command": "2hterm.stopMultiExec", "title": "MultiExec: detener", "category": "2hTerm" },
-      { "command": "2hterm.stopTunnel", "title": "Detener túnel", "category": "2hTerm", "icon": "$(debug-stop)" },
-      { "command": "2hterm.syncNow", "title": "Sincronizar ahora", "category": "2hTerm", "icon": "$(sync)" },
-      { "command": "2hterm.refresh", "title": "Refrescar", "category": "2hTerm", "icon": "$(refresh)" },
-      { "command": "2hterm.import", "title": "Importar sesiones…", "category": "2hTerm", "icon": "$(cloud-download)" },
-      { "command": "2hterm.export", "title": "Exportar sesiones (JSON, sin contraseñas)", "category": "2hTerm" },
-      { "command": "2hterm.vault.setMasterPassword", "title": "Bóveda: crear / cambiar contraseña maestra", "category": "2hTerm" },
-      { "command": "2hterm.vault.lock", "title": "Bóveda: bloquear en este equipo", "category": "2hTerm" },
-      { "command": "2hterm.forgetHostKey", "title": "Olvidar huella de host", "category": "2hTerm" },
-      { "command": "2hterm.sftp.download", "title": "2hTerm: Descargar…", "category": "2hTerm" },
-      { "command": "2hterm.sftp.upload", "title": "2hTerm: Subir archivos aquí…", "category": "2hTerm" },
-      { "command": "2hterm.sftp.terminalHere", "title": "2hTerm: Abrir terminal SSH aquí", "category": "2hTerm" }
+      { "command": "2hterm.addSession", "title": "New Session", "category": "2hTerm", "icon": "$(add)" },
+      { "command": "2hterm.addFolder", "title": "New Folder", "category": "2hTerm", "icon": "$(new-folder)" },
+      { "command": "2hterm.addSessionHere", "title": "New Session Here", "category": "2hTerm", "icon": "$(add)" },
+      { "command": "2hterm.addFolderHere", "title": "New Subfolder", "category": "2hTerm" },
+      { "command": "2hterm.renameFolder", "title": "Rename Folder", "category": "2hTerm" },
+      { "command": "2hterm.deleteFolder", "title": "Delete Folder", "category": "2hTerm" },
+      { "command": "2hterm.quickConnect", "title": "Quick Connect", "category": "2hTerm", "icon": "$(plug)" },
+      { "command": "2hterm.connect", "title": "Open Terminal", "category": "2hTerm", "icon": "$(terminal)" },
+      { "command": "2hterm.openSftp", "title": "Open SFTP in Explorer", "category": "2hTerm", "icon": "$(folder-opened)" },
+      { "command": "2hterm.startTunnels", "title": "Start Tunnels", "category": "2hTerm", "icon": "$(arrow-swap)" },
+      { "command": "2hterm.disconnect", "title": "Disconnect", "category": "2hTerm", "icon": "$(debug-disconnect)" },
+      { "command": "2hterm.editSession", "title": "Edit Session", "category": "2hTerm", "icon": "$(edit)" },
+      { "command": "2hterm.duplicateSession", "title": "Duplicate Session", "category": "2hTerm" },
+      { "command": "2hterm.deleteSession", "title": "Delete Session", "category": "2hTerm" },
+      { "command": "2hterm.copySshCommand", "title": "Copy ssh Command", "category": "2hTerm" },
+      { "command": "2hterm.multiExec", "title": "MultiExec: Type into Multiple Terminals", "category": "2hTerm", "icon": "$(broadcast)" },
+      { "command": "2hterm.stopMultiExec", "title": "MultiExec: Stop", "category": "2hTerm" },
+      { "command": "2hterm.stopTunnel", "title": "Stop Tunnel", "category": "2hTerm", "icon": "$(debug-stop)" },
+      { "command": "2hterm.syncNow", "title": "Sync Now", "category": "2hTerm", "icon": "$(sync)" },
+      { "command": "2hterm.refresh", "title": "Refresh", "category": "2hTerm", "icon": "$(refresh)" },
+      { "command": "2hterm.import", "title": "Import Sessions…", "category": "2hTerm", "icon": "$(cloud-download)" },
+      { "command": "2hterm.export", "title": "Export Sessions (JSON, without passwords)", "category": "2hTerm" },
+      { "command": "2hterm.vault.setMasterPassword", "title": "Vault: Create / Change Master Password", "category": "2hTerm" },
+      { "command": "2hterm.vault.lock", "title": "Vault: Lock on This Machine", "category": "2hTerm" },
+      { "command": "2hterm.forgetHostKey", "title": "Forget Host Fingerprint", "category": "2hTerm" },
+      { "command": "2hterm.sftp.download", "title": "2hTerm: Download…", "category": "2hTerm" },
+      { "command": "2hterm.sftp.upload", "title": "2hTerm: Upload Files Here…", "category": "2hTerm" },
+      { "command": "2hterm.sftp.terminalHere", "title": "2hTerm: Open SSH Terminal Here", "category": "2hTerm" }
     ],
     "menus": {
       "view/title": [
@@ -158,56 +158,56 @@
           "type": "string",
           "enum": ["settingsSync", "githubGist", "none"],
           "enumDescriptions": [
-            "Usa Settings Sync de VS Code (misma cuenta Microsoft/GitHub). Sin configuración extra.",
-            "Gist privado en tu cuenta de GitHub, con fusión por sesión (mejor si editas desde varios equipos a la vez).",
-            "No sincronizar."
+            "Use VS Code Settings Sync (same Microsoft/GitHub account). No extra setup.",
+            "Private Gist in your GitHub account, merged per session (better if you edit from several machines at once).",
+            "Do not sync."
           ],
           "default": "settingsSync",
-          "markdownDescription": "Cómo se sincronizan sesiones, carpetas, huellas de host y la bóveda cifrada entre tus equipos.",
+          "markdownDescription": "How sessions, folders, host fingerprints and the encrypted vault are synced across your machines.",
           "scope": "application"
         },
         "2hterm.sync.secrets": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "Sincronizar contraseñas y claves privadas cifradas (AES-256-GCM) con una contraseña maestra. Si se desactiva, los secretos se guardan solo en el llavero local de este equipo.",
+          "markdownDescription": "Sync passwords and private keys, encrypted (AES-256-GCM) with a master password. When disabled, secrets are stored only in this machine's local keychain.",
           "scope": "application"
         },
         "2hterm.sync.gistIntervalMinutes": {
           "type": "number",
           "default": 5,
           "minimum": 1,
-          "description": "Cada cuántos minutos consultar el Gist (solo con el proveedor githubGist).",
+          "description": "How often, in minutes, to poll the Gist (githubGist provider only).",
           "scope": "application"
         },
         "2hterm.terminal.location": {
           "type": "string",
           "enum": ["editor", "panel"],
           "default": "editor",
-          "description": "Dónde abrir las terminales SSH: como pestañas del editor (estilo MobaXterm) o en el panel inferior.",
+          "description": "Where to open SSH terminals: as editor tabs (MobaXterm style) or in the bottom panel.",
           "scope": "application"
         },
         "2hterm.ssh.keepaliveSeconds": {
           "type": "number",
           "default": 30,
-          "description": "Intervalo de keepalive SSH en segundos (0 = desactivado).",
+          "description": "SSH keepalive interval in seconds (0 = disabled).",
           "scope": "application"
         },
         "2hterm.ssh.readyTimeoutSeconds": {
           "type": "number",
           "default": 20,
-          "description": "Tiempo máximo para establecer la conexión SSH.",
+          "description": "Maximum time, in seconds, to establish the SSH connection.",
           "scope": "application"
         },
         "2hterm.ssh.agent": {
           "type": "string",
           "default": "",
-          "markdownDescription": "Agente SSH para el método `agent`. Vacío = automático (`\\\\.\\pipe\\openssh-ssh-agent` en Windows, `$SSH_AUTH_SOCK` en Linux/macOS). Usa `pageant` para PuTTY Pageant.",
+          "markdownDescription": "SSH agent for the `agent` method. Empty = automatic (`\\\\.\\pipe\\openssh-ssh-agent` on Windows, `$SSH_AUTH_SOCK` on Linux/macOS). Use `pageant` for PuTTY Pageant.",
           "scope": "machine"
         },
         "2hterm.x11.display": {
           "type": "string",
           "default": "localhost:0",
-          "markdownDescription": "Servidor X local para el reenvío X11 (p. ej. VcXsrv o X410 en Windows), formato `host:display`.",
+          "markdownDescription": "Local X server for X11 forwarding (e.g. VcXsrv or X410 on Windows), in `host:display` format.",
           "scope": "machine"
         }
       }

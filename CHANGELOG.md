@@ -1,18 +1,22 @@
 # Changelog
 
+## 0.1.1
+
+- The whole interface, README and Marketplace listing are now in English.
+
 ## 0.1.0
 
-Primera versión.
+First release.
 
-- Sesiones SSH con carpetas, colores, notas y arrastrar y soltar.
-- Terminales en pestañas del editor o en el panel, con reconexión.
-- Autenticación por contraseña, clave privada, agente SSH (OpenSSH / Pageant) y keyboard-interactive (2FA).
-- Jump host (ProxyJump) encadenable.
-- SFTP integrado en el Explorer: editar, descargar y subir.
-- Túneles local (-L), remoto (-R) y SOCKS5 (-D).
-- MultiExec para escribir en varias terminales a la vez.
-- Reenvío X11.
-- Verificación de huellas de host.
-- Sincronización entre equipos con Settings Sync o un Gist privado de GitHub.
-- Bóveda cifrada (AES-256-GCM + scrypt) para contraseñas y claves.
-- Importación desde `~/.ssh/config`, MobaXterm y JSON.
+- SSH sessions with folders, colors, notes and drag and drop.
+- Terminals in editor tabs or in the panel, with reconnect.
+- Authentication by password, private key, SSH agent (OpenSSH / Pageant) and keyboard-interactive (2FA).
+- Chainable jump hosts (ProxyJump).
+- SFTP integrated into the Explorer: edit, download and upload.
+- Local (-L), remote (-R) and SOCKS5 (-D) tunnels.
+- MultiExec to type into several terminals at once.
+- X11 forwarding.
+- Host fingerprint verification.
+- Sync across machines with Settings Sync or a private GitHub Gist.
+- Encrypted vault (AES-256-GCM + scrypt) for passwords and keys.
+- Import from `~/.ssh/config`, MobaXterm and JSON.

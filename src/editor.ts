@@ -29,7 +29,7 @@ export class SessionEditor {
     const existing = this.panels.get(session.id);
     if (existing) return existing.reveal();
 
-    const panel = vscode.window.createWebviewPanel('2hterm.editor', isNew ? 'Nueva sesión' : `Editar: ${session.name}`, vscode.ViewColumn.Active, {
+    const panel = vscode.window.createWebviewPanel('2hterm.editor', isNew ? 'New Session' : `Edit: ${session.name}`, vscode.ViewColumn.Active, {
       enableScripts: true,
       retainContextWhenHidden: true,
     });
@@ -53,7 +53,7 @@ export class SessionEditor {
     panel.webview.onDidReceiveMessage(async (msg) => {
       if (msg.type === 'cancel') return panel.dispose();
       if (msg.type === 'browseKey') {
-        const pick = await vscode.window.showOpenDialog({ title: 'Clave privada', canSelectMany: false, openLabel: 'Usar esta clave' });
+        const pick = await vscode.window.showOpenDialog({ title: 'Private Key', canSelectMany: false, openLabel: 'Use This Key' });
         if (pick?.[0]) panel.webview.postMessage({ type: 'keyPath', path: pick[0].fsPath });
         return;
       }
@@ -88,14 +88,14 @@ async function save(store: Store, vault: Vault, p: SavePayload) {
   await put('privateKey', p.clearEmbeddedKey, p.embedKey && s.keyPath ? fs.readFileSync(expandHome(s.keyPath), 'utf8') : undefined);
 
   await store.upsertSession(s);
-  if (!secretsSaved) vscode.window.showWarningMessage('2hTerm: la sesión se guardó, pero los secretos no (la bóveda no se desbloqueó).');
+  if (!secretsSaved) vscode.window.showWarningMessage('2hTerm: the session was saved, but the secrets were not (the vault was not unlocked).');
 }
 
 function html(webview: vscode.Webview, init: unknown): string {
   const nonce = crypto.randomBytes(16).toString('base64');
   const data = JSON.stringify(init).replace(/</g, '\\u003c');
   return /* html */ `<!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8">
+<html lang="en"><head><meta charset="UTF-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}';">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
@@ -124,70 +124,70 @@ function html(webview: vscode.Webview, init: unknown): string {
 <h1 id="title"></h1>
 <form id="f">
 <fieldset><legend>General</legend><div class="grid">
-  <label for="name">Nombre</label><input id="name" placeholder="(por defecto usuario@host)">
-  <label for="host">Host *</label><input id="host" required placeholder="servidor.ejemplo.com o 10.0.0.5">
-  <label for="port">Puerto</label><input id="port" type="number" min="1" max="65535">
-  <label for="username">Usuario</label><input id="username">
-  <label for="folderId">Carpeta</label><select id="folderId"></select>
+  <label for="name">Name</label><input id="name" placeholder="(defaults to user@host)">
+  <label for="host">Host *</label><input id="host" required placeholder="server.example.com or 10.0.0.5">
+  <label for="port">Port</label><input id="port" type="number" min="1" max="65535">
+  <label for="username">Username</label><input id="username">
+  <label for="folderId">Folder</label><select id="folderId"></select>
   <label for="color">Color</label><select id="color"></select>
 </div></fieldset>
 
-<fieldset><legend>Autenticación</legend><div class="grid">
-  <label for="auth">Método</label>
+<fieldset><legend>Authentication</legend><div class="grid">
+  <label for="auth">Method</label>
   <select id="auth">
-    <option value="password">Contraseña</option>
-    <option value="key">Clave privada</option>
-    <option value="agent">Agente SSH (OpenSSH / Pageant)</option>
+    <option value="password">Password</option>
+    <option value="key">Private key</option>
+    <option value="agent">SSH agent (OpenSSH / Pageant)</option>
     <option value="interactive">Keyboard-interactive (2FA / OTP)</option>
   </select>
-  <label for="password" class="pw">Contraseña</label>
-  <div class="row pw"><input id="password" type="password" autocomplete="new-password"><label class="row"><input id="clearPassword" type="checkbox">olvidar</label></div>
+  <label for="password" class="pw">Password</label>
+  <div class="row pw"><input id="password" type="password" autocomplete="new-password"><label class="row"><input id="clearPassword" type="checkbox">forget</label></div>
   <div class="hint pw" id="pwHint"></div>
-  <label for="keyPath" class="key">Clave privada</label>
+  <label for="keyPath" class="key">Private key</label>
   <div class="row key"><input id="keyPath" placeholder="~/.ssh/id_ed25519"><button type="button" class="secondary icon" id="browse">…</button></div>
   <label class="key"></label>
-  <div class="key"><label class="row"><input id="embedKey" type="checkbox"><span id="embedLabel"></span></label><label class="row" id="clearKeyRow"><input id="clearEmbeddedKey" type="checkbox">quitar la clave guardada en la bóveda</label></div>
-  <label for="passphrase" class="key">Frase de paso</label>
-  <div class="row key"><input id="passphrase" type="password" autocomplete="new-password" placeholder="(opcional)"><label class="row"><input id="clearPassphrase" type="checkbox">olvidar</label></div>
+  <div class="key"><label class="row"><input id="embedKey" type="checkbox"><span id="embedLabel"></span></label><label class="row" id="clearKeyRow"><input id="clearEmbeddedKey" type="checkbox">remove the key stored in the vault</label></div>
+  <label for="passphrase" class="key">Passphrase</label>
+  <div class="row key"><input id="passphrase" type="password" autocomplete="new-password" placeholder="(optional)"><label class="row"><input id="clearPassphrase" type="checkbox">forget</label></div>
 </div></fieldset>
 
-<fieldset><legend>Avanzado</legend><div class="grid">
+<fieldset><legend>Advanced</legend><div class="grid">
   <label for="jumpId">Jump host</label><select id="jumpId"></select>
-  <label for="startupCommand">Comando al iniciar</label><input id="startupCommand" placeholder="p. ej. cd /var/www && ls">
-  <label for="x11">Reenvío X11</label><label class="row"><input id="x11" type="checkbox">Reenviar X11 (requiere un servidor X local, p. ej. VcXsrv con -ac)</label>
-  <label for="notes">Notas</label><textarea id="notes" rows="3"></textarea>
+  <label for="startupCommand">Startup command</label><input id="startupCommand" placeholder="e.g. cd /var/www && ls">
+  <label for="x11">X11 forwarding</label><label class="row"><input id="x11" type="checkbox">Forward X11 (requires a local X server, e.g. VcXsrv with -ac)</label>
+  <label for="notes">Notes</label><textarea id="notes" rows="3"></textarea>
 </div></fieldset>
 
-<fieldset><legend>Túneles</legend>
+<fieldset><legend>Tunnels</legend>
   <table><tbody id="fw"></tbody></table>
-  <div class="row" style="margin-top:8px"><button type="button" class="secondary" id="addFw">+ Añadir túnel</button>
-  <label class="row" style="margin-left:auto"><input id="autoTunnels" type="checkbox">Iniciar al abrir la terminal</label></div>
+  <div class="row" style="margin-top:8px"><button type="button" class="secondary" id="addFw">+ Add tunnel</button>
+  <label class="row" style="margin-left:auto"><input id="autoTunnels" type="checkbox">Start when the terminal opens</label></div>
 </fieldset>
 
-<div class="actions"><button type="submit">Guardar</button><button type="button" class="secondary" id="cancel">Cancelar</button></div>
+<div class="actions"><button type="submit">Save</button><button type="button" class="secondary" id="cancel">Cancel</button></div>
 </form>
 <script nonce="${nonce}">
 const vscode = acquireVsCodeApi();
 const init = ${data};
 const s = init.session;
 const $ = (id) => document.getElementById(id);
-$('title').textContent = init.isNew ? 'Nueva sesión SSH' : 'Editar sesión';
+$('title').textContent = init.isNew ? 'New SSH Session' : 'Edit Session';
 
 const opt = (value, text) => { const o = document.createElement('option'); o.value = value; o.textContent = text; return o; };
-$('folderId').append(opt('', '(raíz)'), ...init.folders.map(f => opt(f.id, f.path)));
-$('jumpId').append(opt('', '(ninguno)'), ...init.jumps.map(j => opt(j.id, j.name)));
-$('color').append(...init.colors.map(c => opt(c, c ? c.replace('terminal.ansi', '') : '(predeterminado)')));
+$('folderId').append(opt('', '(root)'), ...init.folders.map(f => opt(f.id, f.path)));
+$('jumpId').append(opt('', '(none)'), ...init.jumps.map(j => opt(j.id, j.name)));
+$('color').append(...init.colors.map(c => opt(c, c ? c.replace('terminal.ansi', '') : '(default)')));
 
 for (const k of ['name','host','port','username','folderId','color','auth','keyPath','jumpId','startupCommand','notes']) $(k).value = s[k] ?? '';
 $('x11').checked = !!s.x11;
 $('autoTunnels').checked = !!s.autoTunnels;
 
-const where = init.syncSecrets ? 'bóveda cifrada sincronizada' : 'llavero local de este equipo';
-$('pwHint').textContent = (init.hasPassword ? 'Hay una contraseña guardada; déjalo vacío para conservarla. ' : 'Déjalo vacío para que se pida al conectar. ') + 'Se guarda en la ' + where + '.';
-$('embedLabel').textContent = init.syncSecrets ? 'Guardar la clave en la bóveda (disponible en todos tus equipos)' : 'Guardar la clave en el llavero local';
-if (init.hasEmbeddedKey) $('embedLabel').textContent += ' — ya guardada';
+const where = init.syncSecrets ? 'synced encrypted vault' : 'local keychain of this machine';
+$('pwHint').textContent = (init.hasPassword ? 'A password is saved; leave empty to keep it. ' : 'Leave empty to be asked when connecting. ') + 'It is stored in the ' + where + '.';
+$('embedLabel').textContent = init.syncSecrets ? 'Store the key in the vault (available on all your machines)' : 'Store the key in the local keychain';
+if (init.hasEmbeddedKey) $('embedLabel').textContent += ' — already stored';
 $('clearKeyRow').classList.toggle('hidden', !init.hasEmbeddedKey);
-if (init.hasPassphrase) $('passphrase').placeholder = '(guardada; vacío = conservar)';
+if (init.hasPassphrase) $('passphrase').placeholder = '(saved; empty = keep)';
 
 function syncAuth() {
   const a = $('auth').value;
@@ -200,10 +200,10 @@ const fwBody = $('fw');
 function addForward(f) {
   const tr = document.createElement('tr');
   tr.dataset.id = f.id || '';
-  tr.innerHTML = '<td style="width:120px"><select data-k="type"><option value="L">Local (-L)</option><option value="R">Remoto (-R)</option><option value="D">SOCKS (-D)</option></select></td>' +
-    '<td><input data-k="bindHost" placeholder="127.0.0.1"></td><td style="width:90px"><input data-k="bindPort" type="number" placeholder="puerto"></td>' +
-    '<td class="dest">→</td><td class="dest"><input data-k="destHost" placeholder="destino"></td><td class="dest" style="width:90px"><input data-k="destPort" type="number" placeholder="puerto"></td>' +
-    '<td style="width:30px"><button type="button" class="secondary icon" title="Quitar">✕</button></td>';
+  tr.innerHTML = '<td style="width:120px"><select data-k="type"><option value="L">Local (-L)</option><option value="R">Remote (-R)</option><option value="D">SOCKS (-D)</option></select></td>' +
+    '<td><input data-k="bindHost" placeholder="127.0.0.1"></td><td style="width:90px"><input data-k="bindPort" type="number" placeholder="port"></td>' +
+    '<td class="dest">→</td><td class="dest"><input data-k="destHost" placeholder="destination"></td><td class="dest" style="width:90px"><input data-k="destPort" type="number" placeholder="port"></td>' +
+    '<td style="width:30px"><button type="button" class="secondary icon" title="Remove">✕</button></td>';
   for (const el of tr.querySelectorAll('[data-k]')) el.value = f[el.dataset.k] ?? '';
   const sel = tr.querySelector('select');
   const upd = () => tr.querySelectorAll('.dest').forEach(td => td.style.visibility = sel.value === 'D' ? 'hidden' : 'visible');

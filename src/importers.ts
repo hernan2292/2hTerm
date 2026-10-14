@@ -156,9 +156,9 @@ export async function runImport(store: Store) {
     [
       { label: '$(file-code) ~/.ssh/config', id: 'ssh' },
       { label: '$(terminal) MobaXterm (MobaXterm.ini / .mxtsessions)', id: 'moba' },
-      { label: '$(json) Copia de seguridad JSON de 2hTerm', id: 'json' },
+      { label: '$(json) 2hTerm JSON backup', id: 'json' },
     ],
-    { title: 'Importar sesiones desde…' },
+    { title: 'Import sessions from…' },
   );
   if (!kind) return;
   try {
@@ -176,8 +176,8 @@ export async function runImport(store: Store) {
       if (!pick?.[0]) return;
       n = kind.id === 'moba' ? await importMobaXterm(store, pick[0].fsPath) : await importJson(store, pick[0].fsPath);
     }
-    vscode.window.showInformationMessage(`2hTerm: ${n} sesión(es) importada(s).`);
+    vscode.window.showInformationMessage(`2hTerm: ${n} session(s) imported.`);
   } catch (e) {
-    vscode.window.showErrorMessage(`2hTerm: no se pudo importar: ${errMsg(e)}`);
+    vscode.window.showErrorMessage(`2hTerm: import failed: ${errMsg(e)}`);
   }
 }

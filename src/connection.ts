@@ -21,7 +21,7 @@ interface Entry {
 
 class AuthCancelled extends Error {
   constructor() {
-    super('Conexión cancelada');
+    super('Connection cancelled');
   }
 }
 
@@ -75,8 +75,8 @@ export class ConnectionManager implements vscode.Disposable {
 
   async acquire(sessionId: string, depth = 0): Promise<Lease> {
     const session = this.session(sessionId);
-    if (!session) throw new Error('La sesión ya no existe');
-    if (depth > 5) throw new Error('Cadena de jump hosts demasiado larga (¿hay un ciclo?)');
+    if (!session) throw new Error('The session no longer exists');
+    if (depth > 5) throw new Error('Jump host chain too long (is there a cycle?)');
 
     let entry = this.entries.get(sessionId);
     if (!entry) {
@@ -125,7 +125,7 @@ export class ConnectionManager implements vscode.Disposable {
         if (typedPassword !== undefined && this.store.getSession(session.id) && !(await this.vault.has(session.id, 'password'))) {
           const pw = typedPassword;
           vscode.window
-            .showInformationMessage(`¿Guardar la contraseña de ${session.name}?`, 'Guardar')
+            .showInformationMessage(`Save the password for ${session.name}?`, 'Save')
             .then((a) => a && this.vault.set(session.id, 'password', pw));
         }
         return client;
@@ -134,7 +134,7 @@ export class ConnectionManager implements vscode.Disposable {
         entry.releaseJump = undefined;
         const level = (err as { level?: string }).level;
         if (level === 'client-authentication' && attempt < 2 && (session.auth === 'password' || session.auth === 'interactive')) {
-          vscode.window.showWarningMessage(`${session.name}: autenticación fallida.`);
+          vscode.window.showWarningMessage(`${session.name}: authentication failed.`);
           continue;
         }
         throw err;
@@ -175,7 +175,7 @@ export class ConnectionManager implements vscode.Disposable {
     const askPassword = async (prompt?: string) => {
       const pw = await vscode.window.showInputBox({
         title: `2hTerm: ${session.name}`,
-        prompt: prompt ?? `Contraseña de ${sshTarget(session)}`,
+        prompt: prompt ?? `Password for ${sshTarget(session)}`,
         password: true,
         ignoreFocusOut: true,
       });
@@ -192,7 +192,7 @@ export class ConnectionManager implements vscode.Disposable {
       case 'key': {
         let key = await this.vault.get(session.id, 'privateKey');
         if (!key) {
-          if (!session.keyPath) throw new Error('La sesión no tiene clave privada configurada');
+          if (!session.keyPath) throw new Error('The session has no private key configured');
           key = fs.readFileSync(expandHome(session.keyPath), 'utf8');
         }
         config.privateKey = key;
@@ -202,7 +202,7 @@ export class ConnectionManager implements vscode.Disposable {
           if (!pass || utils.parseKey(key, pass) instanceof Error) {
             pass = await vscode.window.showInputBox({
               title: `2hTerm: ${session.name}`,
-              prompt: 'Frase de paso de la clave privada',
+              prompt: 'Private key passphrase',
               password: true,
               ignoreFocusOut: true,
             });
@@ -266,7 +266,7 @@ export class ConnectionManager implements vscode.Disposable {
       let ready = false;
       client.once('ready', () => {
         ready = true;
-        this.log.appendLine(`[${session.name}] conectado a ${sshTarget(session)}`);
+        this.log.appendLine(`[${session.name}] connected to ${sshTarget(session)}`);
         resolve(client);
       });
       client.on('error', (err) => {
@@ -274,7 +274,7 @@ export class ConnectionManager implements vscode.Disposable {
         if (!ready) reject(err);
       });
       client.on('close', () => {
-        if (!ready) return reject(new Error('La conexión se cerró durante el inicio de sesión'));
+        if (!ready) return reject(new Error('The connection was closed during login'));
         if (this.entries.get(session.id) === entry) this.disconnect(session.id);
       });
       client.connect(config);
@@ -288,21 +288,21 @@ export class ConnectionManager implements vscode.Disposable {
     if (known?.fp === fp) return true;
     if (!known) {
       const pick = await vscode.window.showWarningMessage(
-        `Host desconocido ${hostId}`,
-        { modal: true, detail: `Huella de la clave del servidor:\n${fp}\n\nComprueba que coincide antes de continuar.` },
-        'Confiar y guardar',
-        'Solo esta vez',
+        `Unknown host ${hostId}`,
+        { modal: true, detail: `Server key fingerprint:\n${fp}\n\nCheck that it matches before continuing.` },
+        'Trust and Save',
+        'Only This Time',
       );
-      if (pick === 'Confiar y guardar') await this.store.setKnownHost(hostId, fp);
+      if (pick === 'Trust and Save') await this.store.setKnownHost(hostId, fp);
       return !!pick;
     }
     const pick = await vscode.window.showErrorMessage(
-      `¡La huella de ${hostId} ha CAMBIADO!`,
+      `The fingerprint of ${hostId} has CHANGED!`,
       {
         modal: true,
-        detail: `Guardada: ${known.fp}\nRecibida: ${fp}\n\nPuede ser una reinstalación del servidor o un ataque man-in-the-middle.`,
+        detail: `Saved: ${known.fp}\nReceived: ${fp}\n\nThis may be a server reinstall or a man-in-the-middle attack.`,
       },
-      'Aceptar la nueva huella',
+      'Accept the New Fingerprint',
     );
     if (pick) await this.store.setKnownHost(hostId, fp);
     return !!pick;

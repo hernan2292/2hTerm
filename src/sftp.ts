@@ -187,7 +187,7 @@ export class SftpFileSystem implements vscode.FileSystemProvider, vscode.Disposa
     const rm = async (u: vscode.Uri) => {
       const st = await this.stat(u);
       if (st.type === vscode.FileType.Directory) {
-        if (!options.recursive) throw vscode.FileSystemError.NoPermissions('El directorio no está vacío');
+        if (!options.recursive) throw vscode.FileSystemError.NoPermissions('The directory is not empty');
         for (const [name] of await this.readDirectory(u)) await rm(vscode.Uri.joinPath(u, name));
         await call<void>((cb) => sftp.rmdir(u.path, (err) => cb(err, undefined)));
       } else {
