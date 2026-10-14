@@ -1,0 +1,47 @@
+name: Release
+
+# Publica en el Marketplace de VS Code al subir un tag vX.Y.Z (p. ej. `git tag v0.1.0 && git push origin v0.1.0`).
+# Requiere el secreto VSCE_PAT (token de Azure DevOps con permiso Marketplace > Manage).
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Comprobar que el tag coincide con package.json
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          PKG="v$(node -p "require('./package.json').version")"
+          if [ "$PKG" != "${GITHUB_REF_NAME}" ]; then
+            echo "El tag ${GITHUB_REF_NAME} no coincide con package.json ($PKG)"; exit 1
+          fi
+
+      - name: Empaquetar VSIX
+        run: npx vsce package --no-dependencies
+
+      - name: Publicar en el Marketplace
+        run: npx vsce publish --no-dependencies --packagePath *.vsix
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+
+      - name: Adjuntar VSIX a la release de GitHub
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: '*.vsix'
+          generate_release_notes: true
